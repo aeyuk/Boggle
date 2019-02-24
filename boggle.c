@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "board.h"
+
 
 //Refresh page when alarm is reached
 void catchAlarm (int sig) {
