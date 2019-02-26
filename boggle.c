@@ -54,9 +54,11 @@ void displayInterface(char *words, int id) {
     printw("Welcome to Boggle Bitches");
     refresh();
 
+
     getch();
     delwin(boggleWindow);
     endwin();
+
 }
 
 int main(void) {

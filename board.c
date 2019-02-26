@@ -24,7 +24,7 @@
 char selectDice(char* diceList, int randomDice) {
     printf("2 check selectDice\n");
     char temp;
-    while (diceList[randomDice] == '\0') {              //Find an available cube
+    while (diceList[randomDice] == '!') {              //Find an available cube
         randomDice++;
         if (randomDice == 16) {                         //Reset to beginning of the list
             randomDice = 0;
@@ -32,7 +32,7 @@ char selectDice(char* diceList, int randomDice) {
     }
 
     temp = diceList[randomDice];                        //Store selected cube
-    diceList[randomDice] = '\0';                        //Set used cubes to null
+    diceList[randomDice] = '!';                        //Set used cubes to null
     return temp;                                        //Return selected cube
 }
 
@@ -97,10 +97,10 @@ boggleBoard** initializeBoard() {
     char cube;
     for (int i = 0; i < 4; i++) {                        //Board rows
         for (int j = 0; j < 4; j++) {                    //Board cols
+            printf("Board run %d\n", j);
             randomDice = rand() % strlen(diceList);      //Get a random dice
             cube = selectDice(diceList, randomDice);     //Remove the dice from the possible options
             board[i][j].letter = getDiceLetter(cube);           //Get a letter from the dice side
-            printf("Board run %d\n", j);
         }
     }
 
@@ -112,10 +112,10 @@ int main(void) {
 
     boggleBoard** board = initializeBoard();
     for (int i = 0; i < 4; i++) {
-        printf("hellooo\n");
         for (int j = 0; j < 4; j++) {
             printf("%c", board[i][j].letter);
         }
+        printf("\n");
     }
     
     return 0;
