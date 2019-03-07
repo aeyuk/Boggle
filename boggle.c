@@ -2,6 +2,7 @@
 #define WINDOW_HEIGHT 60
 
 #include <curses.h>
+#undef OK
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
@@ -32,7 +33,6 @@ void displayInterface(char *words, int id) {
     refresh();
     keypad(stdscr, TRUE);   // Enable keyboard mapping
     nonl();                 // Make sure curses can detect return key
-    echo();                 // Do not echo input
     scrollok(stdscr, TRUE); // Window is scrolled up one line
     move (0, 0);            //Set cursor location
 
@@ -56,6 +56,7 @@ void displayInterface(char *words, int id) {
 
 
     getch();
+    cbreak();
     delwin(boggleWindow);
     endwin();
 
