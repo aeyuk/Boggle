@@ -6,19 +6,19 @@
 
 //Trie node struct
 struct trieNode {
-    struct trieNode *childrenNodes[26]; 
-    bool end;                       //if true, node = end of word
+    struct trieNode *characters[26]; 
+    bool isLeaf;                       //if true, node = isLeaf of word
 };
 
 
 //Creates and returns a new trie node, initialized to NULLs
-struct trieNode* createNewNode() {
+struct trieNode* createTrieNode() {
     struct trieNode* tNode = NULL;
     tNode = (struct trieNode*)malloc(sizeof(struct trieNode));
     if (tNode) {
-        tNode->end = false;
+        tNode->isLeaf = false;
         for (int i = 0; i < 26; i++) {
-            tNode->childrenNodes[i] = NULL;
+            tNode->characters[i] = NULL;
         }
     }
     return tNode;
@@ -26,46 +26,52 @@ struct trieNode* createNewNode() {
 }
 
 //Inserts key into trie if it isn't already there
-void insertNode(struct trieNode* root, char* key) {
-    int index;
+void insertTrieNode(struct trieNode* root, char* key) {
     struct trieNode* tCurrent = root;
+    int index = 0;
+    //Convert index of character into an integer
+    index = *key - 'a';
 
-    //Traverse through letters of word
-    for (int i = 0; i < strlen(key); i++) {
-        //Store index of key as an int
-        index = (int)key[i] - (int)'a';
-        if (!tCurrent->childrenNodes[index]) {
-            //Makes new node if it doesn't exist
-            tCurrent->childrenNodes[index] = createNewNode();
+    while (*key) {
+        //If path does not exist, create a new node
+        if (tCurrent->characters[index] == NULL) {
+            tCurrent->characters[index] = createTrieNode();
         }
-        //Step to node's children
-        tCurrent = tCurrent->childrenNodes[index];
+        //Move to the next node
+        tCurrent = tCurrent->characters[index];
+        //Move to the next character
+        key++;
     }
-    //Mark end of word for the leaf node
-    tCurrent->end = true;
+    tCurrent->isLeaf = true;
+
 }
 
 bool searchTrie(struct trieNode* root, char* key) {
-    int index;
     struct trieNode* tCurrent = root;
+    int index;
+    index = *key - 'a';
 
-    //Traverse through letters of word
-    for (int i = 0; i < strlen(key); i++) {
-        //Convert key to character index
-        index = (int)key[i] - (int)'a';
-        if (!tCurrent->childrenNodes[index]) {
+    //Return false if the trie is empty
+    if (root == NULL) 
+        return false;
+
+    while (*key) {
+        //printf("%s", &tCurrent->characters);
+        //Move to the next node
+        tCurrent = tCurrent->characters[index];
+        //If at the end of path and string isn't finished, invalid string
+        if (tCurrent == NULL)
             return false;
-        }
-        //Step to node's children
-        tCurrent = tCurrent->childrenNodes[index];
+        //Move to the next character
+        key++;
     }
-    //Returns true if node exists and is the end of word
-    return (tCurrent != NULL && tCurrent->end);
+    //If node is a leaf and end of string is reached, valid string
+    return (tCurrent->isLeaf && tCurrent != NULL);
 }
 
 
 int main(void) {
-    char word[1000];
+   // char word[1000];
 
     FILE *fp;
     fp = fopen("/usr/share/dict/words", "r");
@@ -75,21 +81,36 @@ int main(void) {
     }
 
     //Create root node
-    struct trieNode* root = createNewNode();
+    struct trieNode* root = createTrieNode();
 
+/*
     //Read words file and construct trie
     while (fgets(word, 1000, fp) != NULL) {
         for (int i = 0; i < strlen(word); i++) {
             //Convert all letters to lowercase
             word[i] = tolower(word[i]);
         }
-        insertNode(root, word);
+        insertTrieNode(root, word);
     }
+*/
+
+    insertTrieNode(root, "hello");
+    insertTrieNode(root, "goodbye");
+    insertTrieNode(root, "cat");
+    insertTrieNode(root, "dog");
+    insertTrieNode(root, "mouse");
+
+
 
     printf("checking the word hello\n");
     if (searchTrie(root, "hello"))
         printf("hello exists\n");
     else printf("hello does not exist\n");
+
+ printf("checking the word xxx\n");
+    if (searchTrie(root, "xxx"))
+        printf("xxx exists\n");
+    else printf("xxx does not exist\n");
 
     fclose(fp);
 
