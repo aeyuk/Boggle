@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 typedef struct boggleBoard {
     char letter; //Holds cube's face value
     int flag;
@@ -26,7 +25,6 @@ boggleBoard** initializeBoard(int size) {
     //Load the board with random letters
     for (int i = 0; i < size; i++) {                        //Board rows
         for (int j = 0; j < size; j++) {                    //Board cols
-            printf("Board run %d\n", j);
             int randomIndex = rand() % strlen(letterList);
             board[i][j].letter = letterList[randomIndex];
         }
