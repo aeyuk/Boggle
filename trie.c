@@ -26,13 +26,13 @@ struct trieNode* createTrieNode() {
 }
 
 //Inserts key into trie if it isn't already there
-void insertTrieNode(struct trieNode* root, char* key) {
-    struct trieNode* tCurrent = root;
+void insertTrieNode(struct trieNode* *root, char* key) {
+    struct trieNode* tCurrent = *root;
     int index = 0;
-    //Convert index of character into an integer
-    index = *key - 'a';
 
     while (*key) {
+        //Convert index of character into an integer
+        index = *key - 'a';
         //If path does not exist, create a new node
         if (tCurrent->characters[index] == NULL) {
             tCurrent->characters[index] = createTrieNode();
@@ -49,14 +49,14 @@ void insertTrieNode(struct trieNode* root, char* key) {
 bool searchTrie(struct trieNode* root, char* key) {
     struct trieNode* tCurrent = root;
     int index;
-    index = *key - 'a';
 
     //Return false if the trie is empty
     if (root == NULL) 
         return false;
 
     while (*key) {
-        //printf("%s", &tCurrent->characters);
+        //Convert index of character into an integer
+        index = *key - 'a';
         //Move to the next node
         tCurrent = tCurrent->characters[index];
         //If at the end of path and string isn't finished, invalid string
@@ -71,7 +71,7 @@ bool searchTrie(struct trieNode* root, char* key) {
 
 
 int main(void) {
-   // char word[1000];
+    char word[1000];
 
     FILE *fp;
     fp = fopen("/usr/share/dict/words", "r");
@@ -83,34 +83,32 @@ int main(void) {
     //Create root node
     struct trieNode* root = createTrieNode();
 
-/*
+
     //Read words file and construct trie
     while (fgets(word, 1000, fp) != NULL) {
         for (int i = 0; i < strlen(word); i++) {
+            if (word[i] == '\n') {
+                word[i] = '\0';
+            }
             //Convert all letters to lowercase
             word[i] = tolower(word[i]);
         }
-        insertTrieNode(root, word);
+        insertTrieNode(&root, word);
     }
-*/
 
-    insertTrieNode(root, "hello");
-    insertTrieNode(root, "goodbye");
-    insertTrieNode(root, "cat");
-    insertTrieNode(root, "dog");
-    insertTrieNode(root, "mouse");
-
-
-
-    printf("checking the word hello\n");
-    if (searchTrie(root, "hello"))
-        printf("hello exists\n");
-    else printf("hello does not exist\n");
-
- printf("checking the word xxx\n");
-    if (searchTrie(root, "xxx"))
-        printf("xxx exists\n");
-    else printf("xxx does not exist\n");
+    char input[1000];
+    printf("Enter word to check (q): \n");
+    scanf("%s", input);
+    while (strcmp(input, "q") != 0) {
+        if (searchTrie(root, input)) {
+            printf(">>>%s exists!\n", input);
+        }
+        else {
+            printf(">>>%s does not exist\n", input);
+        }
+        printf("Enter word to check (q to quit): \n");
+        scanf("%s", input);
+    }
 
     fclose(fp);
 
