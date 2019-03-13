@@ -33,20 +33,16 @@ boggleBoard** initializeBoard(int size) {
 }
 
 
-int main(void) {
-    
-    int size = 0;
-    printf("Enter size: \n");
-    scanf("%d", &size);
-
-    boggleBoard** board = initializeBoard(size);
+void displayBoard(int size, boggleBoard** board) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            printf("%c", board[i][j].letter);
+            if (board[i][j].letter == 'Q')
+                printf("Qu ");
+            else
+                printf("%c  ", board[i][j].letter);
         }
         printf("\n");
     }
-    
-    return 0;
+    return;
 }
 
