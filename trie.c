@@ -4,12 +4,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 
-//Trie node struct
-struct trieNode {
-    struct trieNode *characters[26]; 
-    bool isLeaf;                       //if true, node = isLeaf of word
-};
-
+#include "game.h"
 
 //Creates and returns a new trie node, initialized to NULLs
 struct trieNode* createTrieNode() {
@@ -68,3 +63,62 @@ bool searchTrie(struct trieNode* root, char* key) {
     //If node is a leaf and end of string is reached, valid string
     return (tCurrent->isLeaf && tCurrent != NULL);
 }
+
+
+void findWordsUtil(boggleBoard** board, int i, int j, int size, char* userWord, int counter, struct trieNode* tCurrent) {
+    board[i][j].picked = true;
+    userWord[counter] = board[i][j].letter;
+    if (userWord[counter] == 'q') {
+        counter++;
+        userWord[counter] = 'u';
+    }
+    counter++;
+    if (searchTrie(tCurrent, userWord))
+        printf("%s exists\n", userWord);
+    //else printf("%s does not exist\n", userWord);
+    for (int row=i-1; row<=i+1 && row<size; row++)
+        for (int col=j-1; col<=j+1 && col<size; col++)
+            if (row>=0 && col>=0 && board[row][col].picked == false)
+                findWordsUtil(board, row, col, size, userWord, counter, tCurrent);
+
+    if (userWord[counter] == 'q') {
+        userWord[counter-2] = '\0';
+    }
+    userWord[counter-1] = '\0';
+    board[i][j].picked = false;
+}
+
+
+void findWords(boggleBoard** board, int size, struct trieNode* root) {
+    struct trieNode* tCurrent = root;
+    int counter = 0;
+    char userWord[size*size*2];
+    memset(userWord, '\0', size*size*2);
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            findWordsUtil(board, i, j, size, userWord, counter, tCurrent);
+        }
+    }
+}
+
+
+/*
+void userFindWords(struct trieNode* root) {
+    char input[1000];
+    printf("Enter word to check (q): \n");
+    scanf("%s", input);
+    for (int i = 0; i < strlen(input); i++) {
+        input[i] = tolower(input[i]);
+    }
+    while (strcmp(input, "q") != 0) {
+        if (searchTrie(root, input)) {
+            printf(">>>%s exists!\n", input);
+        }
+        else {
+            printf(">>>%s does not exist\n", input);
+        }
+    printf("Enter word to check (q to quit): \n");
+    scanf("%s", input);
+    }
+}
+*/

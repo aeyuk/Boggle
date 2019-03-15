@@ -7,8 +7,9 @@
 #include "game.h"
 
 int main(void) {
-    char word[1000];
 
+    //Open dictionary file
+    char word[1000];
     FILE *fp;
     fp = fopen("/usr/share/dict/words", "r");
     if (fp == NULL) {
@@ -32,28 +33,22 @@ int main(void) {
         insertTrieNode(&root, word);
     }
 
+    //Close file
+    fclose(fp);
 
+
+    //Prompt player for board size
     int size = 0;
     printf("Enter size: \n");
     scanf("%d", &size);
 
+    //Create and display board on screen
     boggleBoard** board = initializeBoard(size);
+
     displayBoard(size, board);
 
-    char input[1000];
-    printf("Enter word to check (q): \n");
-    scanf("%s", input);
-    while (strcmp(input, "q") != 0) {
-        if (searchTrie(root, input)) {
-            printf(">>>%s exists!\n", input);
-        }
-        else {
-            printf(">>>%s does not exist\n", input);
-        }
-        printf("Enter word to check (q to quit): \n");
-        scanf("%s", input);
-    }
+    findWords(board, size, root);
 
-    fclose(fp);
+    //userFindWords(root);
 }
 

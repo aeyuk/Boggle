@@ -1,12 +1,10 @@
-//Specific dice configuration for English Boggle (16 dice)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 
-typedef struct boggleBoard {
-    char letter; //Holds cube's face value
-    int flag;
-} boggleBoard;
+#include "game.h"
 
 
 //Initialize the board
@@ -23,16 +21,18 @@ boggleBoard** initializeBoard(int size) {
         board[i] = (boggleBoard*) malloc (sizeof (boggleBoard) * size);
     }
     //Load the board with random letters
-    for (int i = 0; i < size; i++) {                        //Board rows
-        for (int j = 0; j < size; j++) {                    //Board cols
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
             int randomIndex = rand() % strlen(letterList);
             board[i][j].letter = letterList[randomIndex];
+            board[i][j].picked = false;
         }
     }
     return board;
 }
 
 
+//Print board with arbitrary size to screen 
 void displayBoard(int size, boggleBoard** board) {
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
@@ -40,9 +40,11 @@ void displayBoard(int size, boggleBoard** board) {
                 printf("Qu ");
             else
                 printf("%c  ", board[i][j].letter);
+            board[i][j].letter = tolower(board[i][j].letter);
         }
         printf("\n");
     }
     return;
 }
+
 
