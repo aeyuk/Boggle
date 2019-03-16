@@ -44,11 +44,14 @@ int main(void) {
 
     //Create and display board on screen
     boggleBoard** board = initializeBoard(size);
-
     displayBoard(size, board);
 
-    findWords(board, size, root);
+    //Computer: find all possible words on boggle board
+    printf("Computer:\n");
+    computerFindWords(board, size, root);
 
-    //userFindWords(root);
+    //User inputs all found words
+    //TODO: make sure words come FROM THE BOARD
+    userFindWords(root);
 }
 

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <time.h>
 
 #include "game.h"
 
@@ -21,6 +22,7 @@ boggleBoard** initializeBoard(int size) {
         board[i] = (boggleBoard*) malloc (sizeof (boggleBoard) * size);
     }
     //Load the board with random letters
+    srand(time(NULL));
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             int randomIndex = rand() % strlen(letterList);
@@ -30,6 +32,7 @@ boggleBoard** initializeBoard(int size) {
     }
     return board;
 }
+
 
 
 //Print board with arbitrary size to screen 
