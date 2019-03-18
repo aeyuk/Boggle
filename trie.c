@@ -114,9 +114,9 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
         }
     }
     //Recursively check adjacent letters to find words
-    for (int row=i-1; row<=i+1 && row<size; row++) {
-        for (int col=j-1; col<=j+1 && col<size; col++) {
-            if (row>=0 && col>=0 && board[row][col].picked == false) {
+    for (int row=i-1; row>=0 && row<=i+1 && row<size; row++) {
+        for (int col=j-1; col>= 0 && col<=j+1 && col<size; col++) {
+            if (board[row][col].picked == false) {
                 computerFindWordsHelper(board, row, col, size, userWord, counter, tCurrent);
             }
         }
@@ -164,50 +164,37 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
 }
 
 
-/*
-bool onBoard(boggleBoard** board, int i, int j, int size, char* boardWord, char* userWord, int counter) {
-    if (boardWord == userWord) return true;
-    //Select letter
-    board[i][j].picked = true;
-    //Add letter to string
-    userWord[counter] = board[i][j].letter;
-    counter++;
-
-    //Recursively check adjacent letters to find words
-    for (int row=i-1; row<=i+1 && row<size; row++) {
-        for (int col=j-1; col<=j+1 && col<size; col++) {
-            if (row>=0 && col>=0 && board[row][col].picked == false) {
-                computerFindWordsHelper(board, row, col, size, boardWord, userWord, counter);
-            }
+bool existsOnBoard(char* userInput) {
+    bool check = false;
+    for (int i = 0; i < wordIndex; i++) {
+        if (strcmp(userInput, wordList[i]) == 0) {
+            check = true;
         }
     }
-    //Handle Q
-    if (userWord[counter] == 'q') {
-        userWord[counter-2] = '\0';
-    }
-    //Get rid of current letter and unselect it
-    userWord[counter-1] = '\0';
-    board[i][j].picked = false;
+    return check;
 }
-*/
 
 
 
-void userFindWords(struct trieNode* root) {
-    char input[1000];
+void userFindWords(boggleBoard** board, int size, struct trieNode* root) {
+    printf("\n\nPLAYER 1: \n");
+    int score = 0;
+    char userInput[1000];
     printf("Enter word to check (q): \n");
-    scanf("%s", input);
-    for (int i = 0; i < strlen(input); i++) {
-        input[i] = tolower(input[i]);
+    scanf("%s", userInput);
+    for (int i = 0; i < strlen(userInput); i++) {
+        userInput[i] = tolower(userInput[i]);
     }
-    while (strcmp(input, "q") != 0) {
-        if (searchTrie(root, input)) {
-            printf(">>>%s exists!\n", input);
+    while (strcmp(userInput, "q") != 0) {
+        if (searchTrie(root, userInput) && (existsOnBoard(userInput)))  {
+            printf(">>>%s exists!\n", userInput);
+            score += calculateScore(userInput);
         }
         else {
-            printf(">>>%s does not exist\n", input);
+            printf(">>>%s does not exist\n", userInput);
         }
     printf("Enter word to check (q to quit): \n");
-    scanf("%s", input);
+    scanf("%s", userInput);
     }
+    printf("SCORE: %d\n", score);
 }

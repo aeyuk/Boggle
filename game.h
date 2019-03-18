@@ -26,5 +26,5 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, char* 
 
 void computerFindWords(boggleBoard** board, int size, struct trieNode* root);
 
-void userFindWords(struct trieNode* root);
+void userFindWords(boggleBoard** board, int size, struct trieNode* root);
 

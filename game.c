@@ -52,6 +52,6 @@ int main(void) {
 
     //User inputs all found words
     //TODO: make sure words come FROM THE BOARD
-    userFindWords(root);
+    userFindWords(board, size, root);
 }
 
