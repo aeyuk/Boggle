@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <math.h>
 
 #include "game.h"
 
@@ -38,9 +39,19 @@ int main(void) {
 
 
     //Prompt player for board size
+    //Halt on invalid input
+    char tempSize[10];
+    //memset(tempSize, '\0', 10);
     int size = 0;
     printf("Enter size: \n");
-    scanf("%d", &size);
+    scanf("%s", tempSize);
+
+    if (checkSize(tempSize) == -1) {
+        printf("Error: invalid size\n");
+        return -1;
+    }
+    size = checkSize(tempSize);
+    printf("***size: %d\n", size);
 
     //Create and display board on screen
     boggleBoard** board = initializeBoard(size);
@@ -53,5 +64,9 @@ int main(void) {
     //User inputs all found words
     //TODO: make sure words come FROM THE BOARD
     userFindWords(board, size, root);
+
+    extern int wordIndex;
+    extern char** wordList;
+
 }
 

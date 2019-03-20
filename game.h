@@ -3,10 +3,11 @@ typedef struct boggleBoard {
     int picked;
 } boggleBoard;
 
+int checkSize(char* size);
+
 boggleBoard** initializeBoard(int size);
 
 void displayBoard(int size, boggleBoard** board);
-
 
 struct trieNode {
     struct trieNode *characters[26]; 
@@ -27,4 +28,3 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, char* 
 void computerFindWords(boggleBoard** board, int size, struct trieNode* root);
 
 void userFindWords(boggleBoard** board, int size, struct trieNode* root);
-

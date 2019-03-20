@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <math.h>
 
 #include "game.h"
 
@@ -23,7 +24,6 @@ struct trieNode* createTrieNode() {
     return tNode;
 
 }
-
 
 
 //Inserts key into trie if it isn't already there
@@ -72,7 +72,6 @@ bool searchTrie(struct trieNode* root, char* key) {
 }
 
 
-
 int calculateScore(char* word) {
     int length = strlen(word);
     int score = 0;
@@ -103,7 +102,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     if (searchTrie(tCurrent, userWord) && (strlen(userWord) >= 3)) {
         //Check for duplicates
         bool duplicate = false;
-        for (int i = 0; i < wordIndex; i++) {
+        for (int i = 0; i <= wordIndex; i++) {
             if (strcmp(userWord, wordList[i]) == 0) {
                 duplicate = true;
             }
@@ -133,7 +132,10 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
 
 
 void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
-    wordList = (char**)malloc(1000 * sizeof(char *));
+    //Allocate space for list of words
+    //Total possible words on a board of size n = 2^n
+    //Longest length of word would be assuming a board full of Qu
+    wordList = (char**)malloc(pow(2, size) * sizeof(char *));
     for (int i = 0; i < 1000; i++) {
         wordList[i] = (char*)malloc(size*size*2 * sizeof(char));
     }
@@ -154,7 +156,7 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Print word list to screen
     //Calculates score per word
     int score = 0;
-    for (int i = 0; i < wordIndex; i++) {
+    for (int i = 0; i <= wordIndex; i++) {
         score += calculateScore(wordList[i]);
         printf("%s\n", wordList[i]);
     }
@@ -166,7 +168,7 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
 
 bool existsOnBoard(char* userInput) {
     bool check = false;
-    for (int i = 0; i < wordIndex; i++) {
+    for (int i = 0; i <= wordIndex; i++) {
         if (strcmp(userInput, wordList[i]) == 0) {
             check = true;
         }
@@ -196,5 +198,6 @@ void userFindWords(boggleBoard** board, int size, struct trieNode* root) {
     printf("Enter word to check (q to quit): \n");
     scanf("%s", userInput);
     }
+
     printf("SCORE: %d\n", score);
 }

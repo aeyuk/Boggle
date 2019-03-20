@@ -4,8 +4,40 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <time.h>
+#include <math.h>
 
 #include "game.h"
+
+//Make sure inputted size is a valid integer
+int checkSize(char* size) {
+    int numSize = 0;
+    int indexHelper = 1;
+    int length = strlen(size);
+
+    //Check if string is all digits
+    for (int i = 0; i < length; i++) {
+        //Return with error if non-digit char is found
+        if (!isdigit(size[i])) {
+            return -1;
+        }
+        //Convert size string to integer
+        else {
+            //temp = char converted into integer
+            int temp = (int)size[i] - 48;
+            //Build int version of size
+            numSize = numSize + (temp * pow(10, length - indexHelper));
+            indexHelper++;
+        }
+    }
+
+    //Words must be at least 3 letters long, so min board size = 2x2
+    if (numSize < 2) {
+        return -1;
+    }
+
+    //Return converted size
+    return numSize;
+}
 
 
 //Initialize the board
@@ -14,7 +46,7 @@ boggleBoard** initializeBoard(int size) {
     char letterList[] = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 
-        'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y'
+        'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
     //Allocate space for the board
     boggleBoard** board = (boggleBoard**) malloc (size * sizeof(boggleBoard*));
