@@ -39,6 +39,13 @@ int checkSize(char* size) {
     return numSize;
 }
 
+void delay(int numSeconds) {
+    int milliseconds = 1000 * numSeconds;
+    clock_t startTime = clock();
+    while(clock() < startTime + milliseconds)
+        ;
+}
+
 
 //Initialize the board
 boggleBoard** initializeBoard(int size) {

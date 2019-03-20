@@ -131,7 +131,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
 
 
 
-void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
+int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Allocate space for list of words
     //Total possible words on a board of size n = 2^n
     //Longest length of word would be assuming a board full of Qu
@@ -161,7 +161,8 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
         printf("%s\n", wordList[i]);
     }
 
-    printf("SCORE: %d\n", score);
+    //printf("SCORE: %d\n", score);
+    return score;
 
 }
 
@@ -178,7 +179,7 @@ bool existsOnBoard(char* userInput) {
 
 
 
-void userFindWords(boggleBoard** board, int size, struct trieNode* root) {
+int userFindWords(boggleBoard** board, int size, struct trieNode* root) {
     printf("\n\nPLAYER 1: \n");
     int score = 0;
     char userInput[1000];
@@ -189,15 +190,13 @@ void userFindWords(boggleBoard** board, int size, struct trieNode* root) {
     }
     while (strcmp(userInput, "q") != 0) {
         if (searchTrie(root, userInput) && (existsOnBoard(userInput)))  {
-            printf(">>>%s exists!\n", userInput);
+            printf("%s\n", userInput);
             score += calculateScore(userInput);
-        }
-        else {
-            printf(">>>%s does not exist\n", userInput);
         }
     printf("Enter word to check (q to quit): \n");
     scanf("%s", userInput);
     }
 
-    printf("SCORE: %d\n", score);
+    //printf("SCORE: %d\n", score);
+    return score;
 }

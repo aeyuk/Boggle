@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <math.h>
+#include <time.h>
 
 #include "game.h"
 
@@ -37,21 +38,35 @@ int main(void) {
     //Close file
     fclose(fp);
 
+    //GAME IMPLEMENTATION
+    printf("-------WELCOME TO BOGGLE-------\n");
 
+    //Track total games score
+    int playerPoints = 0;
+    int cpuPoints = 0;
+    char command[20];
+
+    while(strcmp(command, "q") != 0) {
     //Prompt player for board size
-    //Halt on invalid input
     char tempSize[10];
-    //memset(tempSize, '\0', 10);
     int size = 0;
     printf("Enter size: \n");
     scanf("%s", tempSize);
 
+    //Halt on invalid input
     if (checkSize(tempSize) == -1) {
         printf("Error: invalid size\n");
         return -1;
     }
+    //Convert size to integer
     size = checkSize(tempSize);
-    printf("***size: %d\n", size);
+
+    printf("\nREADY?\n");
+    for (int time = 3; time > 0; time--) {
+        delay(1000);
+        printf("%d... ", time);
+    }
+    printf("\n\nGO!\n");
 
     //Create and display board on screen
     boggleBoard** board = initializeBoard(size);
@@ -59,14 +74,35 @@ int main(void) {
 
     //Computer: find all possible words on boggle board
     printf("Computer:\n");
-    computerFindWords(board, size, root);
+    int cpuScore = computerFindWords(board, size, root);
 
     //User inputs all found words
-    //TODO: make sure words come FROM THE BOARD
-    userFindWords(board, size, root);
+    int playerScore = userFindWords(board, size, root);
 
     extern int wordIndex;
-    extern char** wordList;
+
+    //Print score totals
+    printf("\nYou score: %d points\n", playerPoints);
+    printf("Computer score: %d points\n\n", cpuPoints);
+
+    //Incrememnt winner's score
+    if (cpuScore > playerScore) {
+        printf("\nComputer wins!\n");
+        cpuPoints++;
+    }
+    else if (playerScore > cpuScore) {
+        printf("\nYou win!\n");
+        playerPoints++;
+    }
+    else printf("Tie! No points given\n");
+
+    //Print standings
+    printf("\n\nSTANDINGS:\n");
+    printf("Player 1: %d \t Computer: %d\n\n", playerPoints, cpuPoints);
+
+    printf("Play again? (Enter any character to continue; Enter q to stop)\n");
+    scanf("%s", command);
+    }
 
 }
 
