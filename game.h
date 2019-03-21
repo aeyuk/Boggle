@@ -9,6 +9,8 @@ void delay(int numSeconds);
 
 boggleBoard** initializeBoard(int size);
 
+void freeBoggleBoard(boggleBoard** board, int size);
+
 void displayBoard(int size, boggleBoard** board);
 
 struct trieNode {
@@ -26,6 +28,8 @@ struct trieNode* createTrieNode();
 void insertTrieNode(struct trieNode* *root, char* key);
 
 bool searchTrie(struct trieNode* root, char* key);
+
+void freeWordList(int size);
 
 int calculateScore(char* word);
 

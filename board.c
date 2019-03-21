@@ -39,11 +39,12 @@ int checkSize(char* size) {
     return numSize;
 }
 
-void delay(int numSeconds) {
-    int milliseconds = 1000 * numSeconds;
-    clock_t startTime = clock();
-    while(clock() < startTime + milliseconds)
-        ;
+
+void freeBoggleBoard(boggleBoard** board, int size) {
+    for (int i = 0; i < size; i++) {
+        free(board[i]);
+    }
+    free(board);
 }
 
 
@@ -88,5 +89,4 @@ void displayBoard(int size, boggleBoard** board) {
     }
     return;
 }
-
 

@@ -42,8 +42,8 @@ int main(void) {
     printf("-------WELCOME TO BOGGLE-------\n");
 
     //Track total games score
-    int playerPoints = 0;
-    int cpuPoints = 0;
+    int playerScore = 0;
+    int cpuScore = 0;
     char command[20];
 
     while(strcmp(command, "q") != 0) {
@@ -61,48 +61,42 @@ int main(void) {
     //Convert size to integer
     size = checkSize(tempSize);
 
-    printf("\nREADY?\n");
-    for (int time = 3; time > 0; time--) {
-        delay(1000);
-        printf("%d... ", time);
-    }
-    printf("\n\nGO!\n");
-
     //Create and display board on screen
     boggleBoard** board = initializeBoard(size);
     displayBoard(size, board);
 
     //Computer: find all possible words on boggle board
     printf("Computer:\n");
-    int cpuScore = computerFindWords(board, size, root);
+    int cpuPoints = computerFindWords(board, size, root);
 
     //User inputs all found words
-    int playerScore = userFindWords(board, size, root);
+    int playerPoints = userFindWords(board, size, root);
 
-    extern int wordIndex;
 
     //Print score totals
     printf("\nYou score: %d points\n", playerPoints);
     printf("Computer score: %d points\n\n", cpuPoints);
 
     //Incrememnt winner's score
-    if (cpuScore > playerScore) {
+    if (cpuPoints > playerPoints) {
         printf("\nComputer wins!\n");
-        cpuPoints++;
+        cpuScore++;
     }
-    else if (playerScore > cpuScore) {
+    else if (playerPoints > cpuPoints) {
         printf("\nYou win!\n");
-        playerPoints++;
+        playerScore++;
     }
     else printf("Tie! No points given\n");
 
     //Print standings
     printf("\n\nSTANDINGS:\n");
-    printf("Player 1: %d \t Computer: %d\n\n", playerPoints, cpuPoints);
+    printf("Player 1: %d \t Computer: %d\n\n", playerScore, cpuScore);
+
+    freeBoggleBoard(board, size);
+    extern int wordIndex;
 
     printf("Play again? (Enter any character to continue; Enter q to stop)\n");
     scanf("%s", command);
     }
 
 }
-
