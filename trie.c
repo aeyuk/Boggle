@@ -90,10 +90,24 @@ int calculateScore(char* word) {
     return score;
 }
 
+//Add word to list if it isn't already there
+void checkInList(char* userWord) {
+    bool duplicate = false;
+    for (int i = 0; i <= wordIndex; i++) {
+        if (strcmp(userWord, wordList[i]) == 0) {
+            duplicate = true;
+        }
+    }
+    if (duplicate == false) {
+        wordIndex++;
+        strcpy(wordList[wordIndex], userWord);
+    }
+}
 
 
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, 
                 char* userWord, int counter, struct trieNode* tCurrent) {
+    //printf("%s\n", userWord);
     //Select letter
     board[i][j].picked = true;
     //Add letter to string
@@ -105,27 +119,25 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     }
     counter++;
     //Check dictionary to validate prefix and print word to screen
-    if (searchTrie(tCurrent, userWord) && (strlen(userWord) >= 3)) {
-        //Check for duplicates
-        bool duplicate = false;
-        for (int i = 0; i <= wordIndex; i++) {
-            if (strcmp(userWord, wordList[i]) == 0) {
-                duplicate = true;
-            }
-        }
-        if (duplicate == false) {
-            wordIndex++;
-            strcpy(wordList[wordIndex], userWord);
+    if (searchTrie(tCurrent, userWord)) {
+        if ((strlen(userWord) >= 3)) {
+            //Check for duplicates, add to list if new
+            checkInList(userWord);
         }
     }
+    //else (memset(userWord, '\0', size*size*2));
+
     //Recursively check adjacent letters to find words
-    for (int row=i-1; row>=0 && row<=i+1 && row<size; row++) {
-        for (int col=j-1; col>= 0 && col<=j+1 && col<size; col++) {
-            if (board[row][col].picked == false) {
-                computerFindWordsHelper(board, row, col, size, userWord, counter, tCurrent);
+    for (int row=i-1; row<=i+1 && row<size; row++) {
+        for (int col=j-1; col<=j+1 && col<size; col++) {
+            if (row>=0 && col>=0) {
+                if (!board[row][col].picked) {
+                    computerFindWordsHelper(board, row, col, size, userWord, counter, tCurrent);
+                }
             }
         }
     }
+
     //Handle Q
     if (userWord[counter-1] == 'q') {
         userWord[counter-2] = '\0';
@@ -156,7 +168,7 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Find all possible words for every letter in the board
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            memset(userWord, '\0', size*size*2);
+            //memset(userWord, '\0', size*size*2);
             computerFindWordsHelper(board, i, j, size, userWord, counter, tCurrent);
         }
     }
@@ -166,7 +178,7 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     int score = 0;
     for (int i = 0; i <= wordIndex; i++) {
         score += calculateScore(wordList[i]);
-        printf("*%s\n", wordList[i]);
+        printf("%s\n", wordList[i]);
     }
 
     return score;
@@ -178,6 +190,7 @@ bool existsOnBoard(char* userInput) {
     bool check = false;
     for (int i = 0; i <= wordIndex; i++) {
         if (strcmp(userInput, wordList[i]) == 0) {
+            //add struct chosen element
             check = true;
         }
     }

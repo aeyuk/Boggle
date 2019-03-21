@@ -65,9 +65,12 @@ int main(void) {
     boggleBoard** board = initializeBoard(size);
     displayBoard(size, board);
 
+
+
     //Computer: find all possible words on boggle board
     printf("Computer:\n");
     int cpuPoints = computerFindWords(board, size, root);
+
 
     //User inputs all found words
     int playerPoints = userFindWords(board, size, root);

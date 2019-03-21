@@ -33,6 +33,8 @@ void freeWordList(int size);
 
 int calculateScore(char* word);
 
+void checkInList(char* userWord);
+
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, char* userWord, 
                             int counter, struct trieNode* root);
 
