@@ -56,11 +56,14 @@ int searchTrie(struct trieNode* root, char* word) {
     for (int i = 0; i < strlen(word); i++) {
         //Convert index of character into an integer
         index = word[i] - 'a';
-        //Move to the next node
-        tCurrent = tCurrent->characters[index];
         //If at the end of path and string isn't finished, invalid string
-        if (tCurrent == NULL)
-            return -1; //INVALID
+        if (tCurrent->characters[index] == NULL) {
+            return -1;
+        }
+        //Move to the next node
+        else {
+            tCurrent = tCurrent->characters[index];
+        }
         //Move to the next character
     }
 
@@ -131,13 +134,14 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     //Valid word
     if (strlen(userWord) >= 3 && searchCheck == 1) { 
         //Check for duplicates, add to list if new
+        printf("*%s\n", userWord);
         checkInList(userWord);
     }
 
     //Recursively check adjacent letters to find words
     if (searchCheck != -1) {
-        for (int row=i-1; row<=i+1 && row<size; row++) {
-            for (int col=j-1; col<=j+1 && col<size; col++) {
+        for (int row=i-1; row<=i+1; row++) {
+            for (int col=j-1; col<=j+1; col++) {
                 if (inRange(board, size, row, col)) {
                         computerFindWordsHelper(board, row, col, size, 
                         userWord, counter, tCurrent);
@@ -152,7 +156,9 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     }
     //Get rid of current letter and unselect it
     userWord[counter-1] = '\0';
+
     board[i][j].picked = false;
+    //printf("Userword garbage: %s\n", userWord);
 }
 
 
