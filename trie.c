@@ -118,7 +118,6 @@ bool inRange (boggleBoard** board, int size, int i, int j) {
 //Helper function to find all possible words
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, 
                 char* userWord, int counter, struct trieNode* tCurrent) {
-   // printf("%d---%s\n", size, userWord);
     //Select letter
     board[i][j].picked = true;
     //Add letter to string
@@ -134,10 +133,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     //Valid word
     if (strlen(userWord) >= 3 && searchCheck == 1) { 
         //Check for duplicates, add to list if new
-        printf("*%s\n", userWord);
         checkInList(userWord);
-        printf("WordIndex: %d\n", wordIndex);
-
     }
 
     //Recursively check adjacent letters to find words
