@@ -13,6 +13,7 @@ int main(void) {
     //Open dictionary file
     char word[1000];
     FILE *fp;
+    //fp = fopen("words_alpha.txt", "r");
     fp = fopen("/usr/share/dict/words", "r");
     if (fp == NULL) {
         printf("Error: words file could not be found\n");
@@ -32,7 +33,7 @@ int main(void) {
             //Convert all letters to lowercase
             word[i] = tolower(word[i]);
         }
-        insertTrieNode(&root, word);
+        insertTrieNode(root, word);
     }
 
     //Close file

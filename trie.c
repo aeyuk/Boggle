@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
-#include <math.h>
 
 #include "game.h"
 
@@ -11,15 +10,13 @@
 static int wordIndex = -1;
 static char** wordList;
 
+//https://www.techiedelight.com/trie-implementation-insert-search-delete/
 //Creates and returns a new trie node, initialized to NULLs
 struct trieNode* createTrieNode() {
-    struct trieNode* tNode = NULL;
-    tNode = (struct trieNode*)malloc(sizeof(struct trieNode));
-    if (tNode) {
-        tNode->isLeaf = false;
-        for (int i = 0; i < 26; i++) {
-            tNode->characters[i] = NULL;
-        }
+    struct trieNode* tNode = (struct trieNode*)malloc(sizeof(struct trieNode));
+    tNode->isLeaf = false;
+    for (int i = 0; i < 26; i++) {
+        tNode->characters[i] = NULL;
     }
     return tNode;
 
@@ -27,65 +24,59 @@ struct trieNode* createTrieNode() {
 
 
 //Inserts key into trie if it isn't already there
-void insertTrieNode(struct trieNode* *root, char* key) {
-    struct trieNode* tCurrent = *root;
+void insertTrieNode(struct trieNode* root, char* word) {
+    struct trieNode* tCurrent = root;
     int index = 0;
 
-    while (*key) {
+    for (int i = 0; i < strlen(word); i++) {
         //Convert index of character into an integer
-        index = *key - 'a';
+        index = word[i] - 'a';
         //If path does not exist, create a new node
         if (tCurrent->characters[index] == NULL) {
             tCurrent->characters[index] = createTrieNode();
         }
         //Move to the next node
         tCurrent = tCurrent->characters[index];
-        //Move to the next character
-        key++;
     }
+    //End of word is marked as a leaf
     tCurrent->isLeaf = true;
 }
 
 
 
-int searchTrie(struct trieNode* root, char* key) {
+int searchTrie(struct trieNode* root, char* word) {
     struct trieNode* tCurrent = root;
     int index;
 
     //Return false if the trie is empty
     if (root == NULL) 
-        return false;
+        return -1;
 
 
-    while (*key) {
+    for (int i = 0; i < strlen(word); i++) {
         //Convert index of character into an integer
-        index = *key - 'a';
+        index = word[i] - 'a';
         //Move to the next node
         tCurrent = tCurrent->characters[index];
         //If at the end of path and string isn't finished, invalid string
-        if (tCurrent == NULL )
+        if (tCurrent == NULL)
             return -1; //INVALID
         //Move to the next character
-        key++;
     }
 
-    //If node is a leaf and end of string is reached, valid string
-    if (tCurrent->isLeaf && tCurrent != NULL) {
-        return 1; //VALID
-    }
-    //If node is not a leaf but end of string is reached, valid prefix
-    else {//} (!tCurrent->isLeaf && tCurrent != NULL) {
-        return 0; //PREFIX
-    }
+    return (tCurrent->isLeaf);
 }
 
+//Free memory
 void freeWordList(int size) {
-    for (int i = 0; i < pow(size, size)*2; i++) {
+    for (int i = 0; i < size*size*2; i++) {
         free(wordList[i]);
     }
     free(wordList);
 }
 
+
+//Calculate points per word
 int calculateScore(char* word) {
     int length = strlen(word);
     int score = 0;
@@ -97,6 +88,7 @@ int calculateScore(char* word) {
 
     return score;
 }
+
 
 //Add word to list if it isn't already there
 void checkInList(char* userWord) {
@@ -120,9 +112,10 @@ bool inRange (boggleBoard** board, int size, int i, int j) {
 }
 
 
+//Helper function to find all possible words
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, 
                 char* userWord, int counter, struct trieNode* tCurrent) {
-    //printf("%s\n", userWord);
+   // printf("%d---%s\n", size, userWord);
     //Select letter
     board[i][j].picked = true;
     //Add letter to string
@@ -136,22 +129,21 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     //Check dictionary to validate prefix and print word to screen
     int searchCheck = searchTrie(tCurrent, userWord);
     //Valid word
-    if (searchCheck == 1) { 
-        if ((strlen(userWord) >= 3)) {
-            //Check for duplicates, add to list if new
-            checkInList(userWord);
-        }
+    if (strlen(userWord) >= 3 && searchCheck == 1) { 
+        //Check for duplicates, add to list if new
+        checkInList(userWord);
     }
 
     //Recursively check adjacent letters to find words
     if (searchCheck != -1) {
-    for (int row=i-1; row<=i+1 && row<size; row++) {
-        for (int col=j-1; col<=j+1 && col<size; col++) {
-            if (inRange(board, size, row, col)) {
-                    computerFindWordsHelper(board, row, col, size, userWord, counter, tCurrent);
+        for (int row=i-1; row<=i+1 && row<size; row++) {
+            for (int col=j-1; col<=j+1 && col<size; col++) {
+                if (inRange(board, size, row, col)) {
+                        computerFindWordsHelper(board, row, col, size, 
+                        userWord, counter, tCurrent);
+                }
             }
         }
-    }
     }
 
     //Handle Q
@@ -165,15 +157,16 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
 
 
 
+//Computer finds all possible words on baord
 int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Allocate space for list of words
     //Total possible words on a board of size n = 2^n
     //Longest length of word would be assuming a board full of Qu
     wordIndex = -1;
 
-    wordList = (char**)malloc(pow(size, size)*10 * sizeof(char *));
-    for (int i = 0; i < pow(size, size)*2; i++) {
-        wordList[i] = (char*)malloc(pow(size,size)*2 * sizeof(char));
+    wordList = (char**)malloc(480000 * sizeof(char *));
+    for (int i = 0; i < size*size*2; i++) {
+        wordList[i] = (char*)malloc(size*size*2 * sizeof(char));
     }
 
     struct trieNode* tCurrent = root;
@@ -184,6 +177,8 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Find all possible words for every letter in the board
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
+            memset(userWord, '\0', size*size*2);
+            counter = 0;
             computerFindWordsHelper(board, i, j, size, userWord, counter, tCurrent);
         }
     }
@@ -201,6 +196,7 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
 }
 
 
+//Check if the user-entered word is on the board
 bool existsOnBoard(char* userInput) {
     bool check = false;
     for (int i = 0; i <= wordIndex; i++) {
@@ -213,7 +209,7 @@ bool existsOnBoard(char* userInput) {
 }
 
 
-
+//User enters words to play
 int userFindWords(boggleBoard** board, int size, struct trieNode* root) {
     printf("\n\nPLAYER 1: \n");
     int score = 0;
@@ -224,7 +220,7 @@ int userFindWords(boggleBoard** board, int size, struct trieNode* root) {
         userInput[i] = tolower(userInput[i]);
     }
     while (strcmp(userInput, "q") != 0) {
-        if (searchTrie(root, userInput) && (existsOnBoard(userInput)))  {
+        if (searchTrie(root, userInput)) {//&& (existsOnBoard(userInput)))  {
             int points = calculateScore(userInput);
             printf("%d points!\n", points);
             score += points;
@@ -232,7 +228,7 @@ int userFindWords(boggleBoard** board, int size, struct trieNode* root) {
     printf("Enter word to check (q to quit): \n");
     scanf("%s", userInput);
     }
-    
+
     printf("\n\nwordIndex: %d\n\n", wordIndex);
     freeWordList(size);
     

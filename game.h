@@ -25,7 +25,7 @@ struct trieNode {
 
 struct trieNode* createTrieNode();
 
-void insertTrieNode(struct trieNode* *root, char* key);
+void insertTrieNode(struct trieNode* root, char* key);
 
 int searchTrie(struct trieNode* root, char* key);
 
