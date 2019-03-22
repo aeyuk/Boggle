@@ -96,7 +96,7 @@ int main(void) {
     printf("Player 1: %d \t Computer: %d\n\n", playerScore, cpuScore);
 
     freeBoggleBoard(board, size);
-    extern int wordIndex;
+
 
     printf("Play again? (Enter any character to continue; Enter q to stop)\n");
     scanf("%s", command);

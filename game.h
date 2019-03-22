@@ -27,13 +27,15 @@ struct trieNode* createTrieNode();
 
 void insertTrieNode(struct trieNode* *root, char* key);
 
-bool searchTrie(struct trieNode* root, char* key);
+int searchTrie(struct trieNode* root, char* key);
 
 void freeWordList(int size);
 
 int calculateScore(char* word);
 
 void checkInList(char* userWord);
+
+bool inRange (boggleBoard** board, int size, int i, int j);
 
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, char* userWord, 
                             int counter, struct trieNode* root);
