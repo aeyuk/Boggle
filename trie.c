@@ -72,7 +72,7 @@ int searchTrie(struct trieNode* root, char* word) {
 
 //Free memory
 void freeWordList(int size) {
-    for (int i = 0; i < size*size*2; i++) {
+    for (int i = 0; i < 480000; i++) {
         free(wordList[i]);
     }
     free(wordList);
@@ -136,6 +136,8 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
         //Check for duplicates, add to list if new
         printf("*%s\n", userWord);
         checkInList(userWord);
+        printf("WordIndex: %d\n", wordIndex);
+
     }
 
     //Recursively check adjacent letters to find words
@@ -170,8 +172,9 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Longest length of word would be assuming a board full of Qu
     wordIndex = -1;
 
+    //Assume max wordList would be all the words in the dictionary
     wordList = (char**)malloc(480000 * sizeof(char *));
-    for (int i = 0; i < size*size*2; i++) {
+    for (int i = 0; i < 480000; i++) {
         wordList[i] = (char*)malloc(size*size*2 * sizeof(char));
     }
 
