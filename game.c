@@ -48,38 +48,31 @@ int main(void) {
     char command[20];
 
     while(strcmp(command, "q") != 0) {
-    //Prompt player for board size
-    char tempSize[10];
-    int size = 0;
-    printf("Enter size: \n");
-    scanf("%s", tempSize);
 
-    //Halt on invalid input
-    if (checkSize(tempSize) == -1) {
-        printf("Error: invalid size\n");
-        return -1;
-    }
-    //Convert size to integer
-    size = checkSize(tempSize);
+    //Prompt player for board size, halt on invalid input
+    int size = promptBoardSize();
+
+    //Prompt player for difficulty, halt on invalid input
+    int difficulty = promptDifficulty();
+    printf("%d\n", difficulty);
+
 
     //Create and display board on screen
     boggleBoard** board = initializeBoard(size);
     displayBoard(size, board);
 
 
-
     //Computer: find all possible words on boggle board
-    printf("Computer:\n");
     int cpuPoints = computerFindWords(board, size, root);
 
 
-    //User inputs all found words
+    //User: plays and finds words
     int playerPoints = userFindWords(board, size, root);
 
 
     //Print score totals
-    printf("\nYou score: %d points\n", playerPoints);
-    printf("Computer score: %d points\n\n", cpuPoints);
+    printf("\nYou scored: %d points\n", playerPoints);
+    printf("Computer scored: %d points\n\n", cpuPoints);
 
     //Incrememnt winner's score
     if (cpuPoints > playerPoints) {

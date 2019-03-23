@@ -8,36 +8,75 @@
 
 #include "game.h"
 
-//Make sure inputted size is a valid integer
-int checkSize(char* size) {
-    int numSize = 0;
+//Make sure input for size/difficulty is a valid integer
+int checkInput(char* input, char* type) {
+    int numInput = 0;
     int indexHelper = 1;
-    int length = strlen(size);
+    int length = strlen(input);
 
     //Check if string is all digits
     for (int i = 0; i < length; i++) {
         //Return with error if non-digit char is found
-        if (!isdigit(size[i])) {
+        if (!isdigit(input[i])) {
             return -1;
         }
         //Convert size string to integer
         else {
             //temp = char converted into integer
-            int temp = (int)size[i] - 48;
+            int temp = (int)input[i] - 48;
             //Build int version of size
-            numSize = numSize + (temp * pow(10, length - indexHelper));
+            numInput = numInput + (temp * pow(10, length - indexHelper));
             indexHelper++;
         }
     }
-
-    //Words must be at least 3 letters long, so min board size = 2x2
-    if (numSize < 2) {
+    //Handle size parameters
+    if (strcmp(type, "size")) {
+        //Words must be at least 3 letters long, so min board size = 2x2
+        if (numInput < 2) {
+            return -1;
+        }
+        //Return converted size
+        return numInput;
+    }
+    //Handle difficulty parameters
+    else if (strcmp(type, "difficulty")) {
+        if (numInput < 1 || numInput > 5) {
+            return -1;
+        }
+        return numInput;
+    }
+    else {
         return -1;
     }
-
-    //Return converted size
-    return numSize;
 }
+
+//Prompt player to enter board size
+int promptBoardSize() {
+    char tempSize[10];
+    printf("Enter size of board: \n");
+    scanf("%s", tempSize);
+    int size = checkInput(tempSize, "size");
+    if (size == -1) {
+        printf("Error: invalid input.\n\n");
+        promptBoardSize();
+    }
+    return size;
+}
+
+
+//Prompt player to enter difficulty
+int promptDifficulty() {
+    char tempDiffculty[10];;
+    printf("Choose the difficulty of the computer from 1 to 5, 1 being easiest:\n");
+    scanf("%s", tempDiffculty);
+    int difficulty = checkInput(tempDiffculty, "difficulty");
+    if (difficulty == -1) {
+        printf("Error: invalid input.\n\n");
+        promptDifficulty();
+    }
+    return difficulty;
+}
+
 
 
 void freeBoggleBoard(boggleBoard** board, int size) {
@@ -59,7 +98,7 @@ boggleBoard** initializeBoard(int size) {
     //Allocate space for the board
     boggleBoard** board = (boggleBoard**) malloc (size * sizeof(boggleBoard*));
     for (int i = 0; i < size; i++) {
-        board[i] = (boggleBoard*) malloc (sizeof (boggleBoard) * size);
+        board[i] = (boggleBoard*) malloc (sizeof(boggleBoard) * size);
     }
     //Load the board with random letters
     srand(time(NULL));
@@ -89,4 +128,5 @@ void displayBoard(int size, boggleBoard** board) {
     }
     return;
 }
+
 
