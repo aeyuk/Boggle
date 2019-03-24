@@ -244,6 +244,8 @@ int* userFindWords(boggleBoard** board, int size,
     printf("Start finding words! \n");
     scanf("%s", userInput);
     for (int i = 0; i < strlen(userInput); i++) {
+        
+        //add invalid input catcher
         userInput[i] = tolower(userInput[i]);
     }
     while (strcmp(userInput, "q") != 0) {
@@ -291,11 +293,15 @@ int* userFindWords(boggleBoard** board, int size,
 }
 
 void printMissed() {
+    system("clear");
     printf(".................................................................\n");
     printf("WORDS YOU MISSED: \n");
     for (int i = 0; i < wordIndex; i++) {
         if (!wordList[i].playerFound)
-            printf("%s\n", wordList[i].word);
+            printf("%s\t", wordList[i].word);
+        if (i % 8 == 0 && i != 0) printf("\n");
     }
     printf("\n");
+    printf(".................................................................\n");
+
 }
