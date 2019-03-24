@@ -214,7 +214,6 @@ void hideWords(int difficulty) {
     int level = 8 - difficulty;
     int tempIndex = wordIndex / level;
     
-    printf("TEMP INDEX: %d  WORD INDEX: %d\n", tempIndex, wordIndex);
     for (int i = tempIndex; i < wordIndex; i++) {
         int randomWord = rand() % wordIndex;
         wordList[randomWord].hidden = true;
@@ -230,7 +229,7 @@ int* userFindWords(boggleBoard** board, int size,
     
     printf("\n\nPLAYER 1: \n");
     char userInput[1000];
-    printf("Enter word to check (q to quit): \n");
+    printf("Start finding words! \n");
     scanf("%s", userInput);
     for (int i = 0; i < strlen(userInput); i++) {
         userInput[i] = tolower(userInput[i]);
@@ -240,13 +239,14 @@ int* userFindWords(boggleBoard** board, int size,
         if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
             printf("Invalid word!\n\n");
         }
-    printf("Enter word to check (q to quit): \n");
     scanf("%s", userInput);
     }
 
     //Player points @index 0; cpu points @index 1
     static int pointsArray[2];
 
+    printf("\n");
+    printf(".................................................................\n");
     printf("\nCOMPUTER FOUND:\n");
     for (int i = 0; i < wordIndex; i++) {
         if (wordList[i].playerFound == true)
@@ -256,7 +256,10 @@ int* userFindWords(boggleBoard** board, int size,
             pointsArray[1] += calculateScore(wordList[i].word);
         }
     }
+    printf("\n.................................................................\n");
 
+
+    printf("\n");
     printf("\nYOU FOUND:\n");
     for (int i= 0; i < wordIndex; i++) {
         if (wordList[i].playerFound && !wordList[i].hidden) {
@@ -267,6 +270,8 @@ int* userFindWords(boggleBoard** board, int size,
             pointsArray[0] += calculateScore(wordList[i].word);
         }
     }
+    printf("\n.................................................................\n");
+
 
     freeWordlist();
     
@@ -274,8 +279,11 @@ int* userFindWords(boggleBoard** board, int size,
 }
 
 void printMissed() {
+    printf(".................................................................\n");
+    printf("WORDS YOU MISSED: \n");
     for (int i = 0; i < wordIndex; i++) {
         if (!wordList[i].playerFound)
             printf("%s\n", wordList[i].word);
     }
+    printf("\n");
 }

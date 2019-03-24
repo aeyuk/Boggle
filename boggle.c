@@ -1,110 +1,92 @@
-/*
-
-  CURWIN1.C
-  =========
-  (c) Copyright Paul Griffiths 1999
-  Email: mail@paulgriffiths.net
-
-  Moving windows with ncurses.
-
-*/
-
-
-#include <stdlib.h>
 #include <stdio.h>
-#include <curses.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <math.h>
+#include <time.h>
+#include <ncurses.h>
 
+#include "game.h"
+
+
+
+WINDOW *create_newwin(int height, int width, int starty, int startx);
 
 int main(void) {
-    
-    WINDOW * mainwin, * childwin;
-    int      ch;
-
-
-    /*  Set the dimensions and initial
-	position for our child window   */
-
-    int      width = 50, height = 50;
-    int      rows  = 40, cols   = 40;
-    int      x = (cols - width)  / 2;
-    int      y = (rows - height) / 2;
-
-
-    /*  Initialize ncurses  */
-
-    if ( (mainwin = initscr()) == NULL ) {
-	fprintf(stderr, "Error initialising ncurses.\n");
-	exit(EXIT_FAILURE);
+    //Open dictionary file
+    char word[1000];
+    FILE *fp;
+    //fp = fopen("words_alpha.txt", "r");
+    fp = fopen("/usr/share/dict/words", "r");
+    if (fp == NULL) {
+        printf("Error: words file could not be found\n");
+        return 1;
     }
-    
 
-    /*  Switch of echoing and enable keypad (for arrow keys)  */
-
-    noecho();
-    keypad(mainwin, TRUE);
+    //Create root node
+    struct trieNode* root = createTrieNode();
 
 
-    /*  Make our child window, and add
-	a border and some text to it.   */
+    //Read words file and construct trie
+    while (fgets(word, 1000, fp) != NULL) {
+        for (int i = 0; i < strlen(word); i++) {
+            if (word[i] == '\n') {
+                word[i] = '\0';
+            }
+            //Convert all letters to lowercase
+            word[i] = tolower(word[i]);
+        }
+        insertTrieNode(root, word);
+    }
 
-    childwin = subwin(mainwin, height, width, y, x);
-    box(childwin, 0, 0);
-    mvwaddstr(childwin, 1, 4, "Move the window");
-    mvwaddstr(childwin, 2, 2, "with the arrow keys");
-    mvwaddstr(childwin, 3, 6, "or HOME/END");
-    mvwaddstr(childwin, 5, 3, "Press 'q' to quit");
-
-    refresh();
+    //Close file
+    fclose(fp);
 
 
-    /*  Loop until user hits 'q' to quit  */
 
-    while ( (ch = getch()) != 'q' ) {
 
-	switch ( ch ) {
+	int ch;
 
-	case KEY_UP:
-	    if ( y > 0 )
-		--y;
-	    break;
+	initscr();
+	cbreak();
+	keypad(stdscr, TRUE);
 
-	case KEY_DOWN:
-	    if ( y < (rows - height) )
-		++y;
-	    break;
+	printw("WELCOME TO BOGGLE\n");
+    printw("Press F1 to exit\n");
+	refresh();
+    WINDOW *board, *score, *input;
+	board = create_newwin(LINES/2, COLS/3, 0, 0);
+    score = create_newwin((LINES / 2), (2*COLS / 3), 0, COLS/3);
+    input = create_newwin((LINES / 2), COLS-1, LINES/2, 0);
 
-	case KEY_LEFT:
-	    if ( x > 0 )
-		--x;
-	    break;
+    wmove(input, 1, 1);
+    //Prompt player for board size, halt on invalid input
+    int size = promptBoardSize();
+    size = size +10;
+    wrefresh(input);
+    //wclear(input);
 
-	case KEY_RIGHT:
-	    if ( x < (cols - width) )
-		++x;
-	    break;
+    //Prompt player for difficulty, halt on invalid input
+    int difficulty = promptDifficulty();
+    difficulty = difficulty + 10;
+    wrefresh(input);
+    //wclear(input);
 
-	case KEY_HOME:
-	    x = 0;
-	    y = 0;
-	    break;
-
-	case KEY_END:
-	    x = (cols - width);
-	    y = (rows - height);
-	    break;
-
+	while((ch = getch()) != KEY_F(1))
+	{	
 	}
+		
+	endwin(); //End curses mode
+	return 0;
+}
 
-	mvwin(childwin, y, x);
-    }
+WINDOW *create_newwin(int height, int width, int starty, int startx) {
+    WINDOW *local_win;
 
+	local_win = newwin(height, width, starty, startx);
+	box(local_win, 0 , 0);
+	wrefresh(local_win); //Show box
 
-    /*  Clean up after ourselves  */
-
-    delwin(childwin);
-    delwin(mainwin);
-    endwin();
-    refresh();
-
-    return EXIT_SUCCESS;
+	return local_win;
 }

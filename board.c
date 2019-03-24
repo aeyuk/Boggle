@@ -53,7 +53,7 @@ int checkInput(char* input, char* type) {
 //Prompt player to enter board size
 int promptBoardSize() {
     char tempSize[10];
-    printf("Enter size of board: \n");
+    printf("Enter size of board (excessively large inputs may disrupt viewing): \n");
     scanf("%s", tempSize);
     int size = checkInput(tempSize, "size");
     if (size == -1) {
@@ -116,16 +116,32 @@ boggleBoard** initializeBoard(int size) {
 
 //Print board with arbitrary size to screen 
 void displayBoard(int size, boggleBoard** board) {
+    int j = size;
+    while (j != 0) {
+        printf("____");
+        j--;
+    }
+    printf("\n\n");
+
     for (int i = 0; i < size; i++) {
+        printf("|  ");
         for (int j = 0; j < size; j++) {
             if (board[i][j].letter == 'Q')
                 printf("Qu ");
             else
                 printf("%c  ", board[i][j].letter);
+            if (j == size - 1)
+                printf("|");
             board[i][j].letter = tolower(board[i][j].letter);
         }
         printf("\n");
     }
+
+    while (j != size) {
+        printf("____");
+        j++;
+    }
+    printf("\n");
     return;
 }
 

@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,6 +40,8 @@ int main(void) {
     //Close file
     fclose(fp);
 
+    system("clear");
+
     //GAME IMPLEMENTATION
     printf("-------WELCOME TO BOGGLE-------\n");
 
@@ -75,8 +78,11 @@ int main(void) {
     int cpuPoints = pointsArray[1];
 
     //Print score totals
+
     printf("\nYou scored: %d points\n", playerPoints);
     printf("Computer scored: %d points\n\n", cpuPoints);
+    printf(".................................................................\n");
+
 
     //Incrememnt winner's score
     if (cpuPoints > playerPoints) {
@@ -89,9 +95,15 @@ int main(void) {
     }
     else printf("Tie! No points given\n");
 
+
+    printf("\n.................................................................\n");
+
+
     //Print standings
     printf("\n\nSTANDINGS:\n");
     printf("Player 1: %d \t Computer: %d\n\n", playerScore, cpuScore);
+
+    printf(".................................................................\n");
 
 
     printf("See the words you missed? (Enter 'y' to see)\n");
@@ -108,6 +120,7 @@ int main(void) {
 
     printf("Play again? (Enter any character to continue; Enter q to stop)\n");
     scanf("%s", command);
+    system("clear");
     }
 
 }
