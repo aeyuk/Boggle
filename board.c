@@ -30,7 +30,7 @@ int checkInput(char* input, char* type) {
         }
     }
     //Handle size parameters
-    if (strcmp(type, "size")) {
+    if (strcmp(type, "size") == 0) {
         //Words must be at least 3 letters long, so min board size = 2x2
         if (numInput < 2) {
             return -1;
@@ -39,14 +39,14 @@ int checkInput(char* input, char* type) {
         return numInput;
     }
     //Handle difficulty parameters
-    else if (strcmp(type, "difficulty")) {
+    else if (strcmp(type, "difficulty") == 0) {
         if (numInput < 1 || numInput > 5) {
             return -1;
         }
         return numInput;
     }
     else {
-        return -1;
+        return numInput;
     }
 }
 
@@ -58,8 +58,9 @@ int promptBoardSize() {
     int size = checkInput(tempSize, "size");
     if (size == -1) {
         printf("Error: invalid input.\n\n");
-        promptBoardSize();
+        return promptBoardSize();
     }
+    printf("sz: %d\n", size);
     return size;
 }
 
@@ -72,8 +73,9 @@ int promptDifficulty() {
     int difficulty = checkInput(tempDiffculty, "difficulty");
     if (difficulty == -1) {
         printf("Error: invalid input.\n\n");
-        promptDifficulty();
+        return promptDifficulty();
     }
+    printf("diff: %d\n", difficulty);
     return difficulty;
 }
 

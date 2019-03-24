@@ -63,12 +63,16 @@ int main(void) {
 
 
     //Computer: find all possible words on boggle board
-    int cpuPoints = computerFindWords(board, size, root);
+    computerFindWords(board, size, root);
 
 
     //User: plays and finds words
-    int playerPoints = userFindWords(board, size, root);
+    //Array holds player points, computer points
+    int* pointsArray;
 
+    pointsArray = userFindWords(board, size, root, difficulty);
+    int playerPoints = pointsArray[0];
+    int cpuPoints = pointsArray[1];
 
     //Print score totals
     printf("\nYou scored: %d points\n", playerPoints);
@@ -89,7 +93,17 @@ int main(void) {
     printf("\n\nSTANDINGS:\n");
     printf("Player 1: %d \t Computer: %d\n\n", playerScore, cpuScore);
 
+
+    printf("See the words you missed? (Enter 'y' to see)\n");
+    scanf("%s", command);
+    if (strcmp(command, "y") == 0) {
+        printMissed();
+    }
+
+
+    //Reset game
     freeBoggleBoard(board, size);
+    memset(pointsArray, 0, size);
 
 
     printf("Play again? (Enter any character to continue; Enter q to stop)\n");

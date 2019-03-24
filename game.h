@@ -30,5 +30,8 @@ void checkInList(char* userWord);
 bool inRange (boggleBoard** board, int size, int i, int j);
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, char* userWord, 
                             int counter, struct trieNode* root);
-int computerFindWords(boggleBoard** board, int size, struct trieNode* root);
-int userFindWords(boggleBoard** board, int size, struct trieNode* root);
+void computerFindWords(boggleBoard** board, int size, struct trieNode* root);
+bool existsOnBoard(char* userInput);
+void hideWords(int difficulty);
+int* userFindWords(boggleBoard** board, int size, struct trieNode* root, int difficulty);
+void printMissed();

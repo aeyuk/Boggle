@@ -161,7 +161,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
 
 
 //Computer finds all possible words on baord
-int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
+void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Reset index
     wordIndex = -1;
 
@@ -184,18 +184,12 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
         for (int j = 0; j < size; j++) {
             memset(userWord, '\0', size*size*2);
             counter = 0;
-            computerFindWordsHelper(board, i, j, size, userWord, counter, tCurrent);
+            computerFindWordsHelper(board, i, j, size, 
+            userWord, counter, tCurrent);
         }
     }
-    
-    //Print word list to screen
-    //Calculates score per word
-    int score = 0;
-    for (int i = 0; i <= wordIndex; i++) {
-        score += calculateScore(wordList[i].word);
-    }
 
-    return score;
+    return;
 
 }
 
@@ -204,7 +198,9 @@ int computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
 bool existsOnBoard(char* userInput) {
     bool check = false;
     for (int i = 0; i <= wordIndex; i++) {
+        //If on the board
         if (strcmp(userInput, wordList[i].word) == 0) {
+            //Mark word in common
             wordList[i].playerFound = true;
             check = true;
         }
@@ -213,10 +209,25 @@ bool existsOnBoard(char* userInput) {
 }
 
 
+//Hide words computer found based on difficulty
+void hideWords(int difficulty) {
+    int level = 8 - difficulty;
+    int tempIndex = wordIndex / level;
+    //Make sure it isn't 0
+    tempIndex += 1;
+    for (int i = 0; i < tempIndex; i++) {
+        wordList[i].hidden = true;
+    }
+}
+
 //User enters words to play
-int userFindWords(boggleBoard** board, int size, struct trieNode* root) {
+int* userFindWords(boggleBoard** board, int size, 
+                  struct trieNode* root, int difficulty) {
+    
+    //Hide computer-found words based on difficulty
+    hideWords(difficulty);
+    
     printf("\n\nPLAYER 1: \n");
-    int score = 0;
     char userInput[1000];
     printf("Enter word to check (q): \n");
     scanf("%s", userInput);
@@ -224,23 +235,46 @@ int userFindWords(boggleBoard** board, int size, struct trieNode* root) {
         userInput[i] = tolower(userInput[i]);
     }
     while (strcmp(userInput, "q") != 0) {
-        if (searchTrie(root, userInput))  {
-            int points = calculateScore(userInput);
-            //Handle grammar
-            if (points == 1) printf("1 point!\n");
-            else printf("%d points!\n", points);
-            score += points;
+        //If word is not in the dictionary or not on the board
+        if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
+            printf("Invalid word!\n\n");
         }
     printf("Enter word to check (q to quit): \n");
     scanf("%s", userInput);
     }
 
-    printf("COMPUTER FOUND:\n");
+    //Player points @index 0; cpu points @index 1
+    static int pointsArray[2];
+
+    printf("\nCOMPUTER FOUND:\n");
     for (int i = 0; i < wordIndex; i++) {
-        printf("%s\n", wordList[i].word);
+        if (wordList[i].playerFound == true)
+            printf("%s  X\n", wordList[i].word);
+        else if (!wordList[i].hidden && !wordList[i].playerFound) {
+            printf("%s\n", wordList[i].word);
+            pointsArray[1] += calculateScore(wordList[i].word);
+        }
+    }
+
+    printf("\nYOU FOUND:\n");
+    for (int i= 0; i < wordIndex; i++) {
+        if (wordList[i].playerFound && !wordList[i].hidden) {
+            printf("%s  X\n", wordList[i].word);
+        }
+        else if (wordList[i].playerFound && wordList[i].hidden) {
+            printf("%s \n", wordList[i].word);
+            pointsArray[0] += calculateScore(wordList[i].word);
+        }
     }
 
     freeWordlist();
     
-    return score;
+    return pointsArray;
+}
+
+void printMissed() {
+    for (int i = 0; i < wordIndex; i++) {
+        if (!wordList[i].playerFound)
+            printf("%s\n", wordList[i].word);
+    }
 }
