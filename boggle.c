@@ -1,71 +1,110 @@
-#define WINDOW_WIDTH 30
-#define WINDOW_HEIGHT 60
+/*
 
-#include <curses.h>
-#undef OK
-#include <signal.h>
-#include <unistd.h>
-#include <string.h>
-#include <signal.h>
-#include <curses.h>
-#include <stdio.h>
+  CURWIN1.C
+  =========
+  (c) Copyright Paul Griffiths 1999
+  Email: mail@paulgriffiths.net
+
+  Moving windows with ncurses.
+
+*/
+
+
 #include <stdlib.h>
+#include <stdio.h>
+#include <curses.h>
 
-//Refresh page when alarm is reached
-int catchAlarm(int sig) {
-    if (sig == SIGALRM) {
-        clear();
-        refresh();
-        endwin();
-        printf("Ending one child: %d\n", getpid());
-        _exit(1);
-    }
-    return sig;
-}
-
-void displayInterface(char *words, int id) {
-    
-    WINDOW *boggleWindow;
-    int yOffset;
-
-    //Set up the ncurses
-    initscr();              // Initialize the curses library
-    refresh();
-    keypad(stdscr, TRUE);   // Enable keyboard mapping
-    nonl();                 // Make sure curses can detect return key
-    scrollok(stdscr, TRUE); // Window is scrolled up one line
-    move (0, 0);            //Set cursor location
-
-    //Set up the window
-    yOffset = (LINES - WINDOW_HEIGHT) / 2;
-    boggleWindow = newwin(WINDOW_WIDTH, WINDOW_HEIGHT, yOffset, 0);
-    box(boggleWindow, 0 , 0);
-    wrefresh(boggleWindow);
-    refresh();
-
-
-    //Set an alarm
-    signal(SIGALRM, (sig_t)catchAlarm);
-    alarm(10); //Alarm goes off every three minutes
-
-
-    //Set cursor location
-    move(5, 1);
-    printw("Welcome to Boggle Bitches");
-    refresh();
-
-
-    getch();
-    cbreak();
-    delwin(boggleWindow);
-    endwin();
-
-}
 
 int main(void) {
-    char words[5];
+    
+    WINDOW * mainwin, * childwin;
+    int      ch;
 
-    displayInterface(words, 5);
 
-    return 0;
+    /*  Set the dimensions and initial
+	position for our child window   */
+
+    int      width = 50, height = 50;
+    int      rows  = 40, cols   = 40;
+    int      x = (cols - width)  / 2;
+    int      y = (rows - height) / 2;
+
+
+    /*  Initialize ncurses  */
+
+    if ( (mainwin = initscr()) == NULL ) {
+	fprintf(stderr, "Error initialising ncurses.\n");
+	exit(EXIT_FAILURE);
+    }
+    
+
+    /*  Switch of echoing and enable keypad (for arrow keys)  */
+
+    noecho();
+    keypad(mainwin, TRUE);
+
+
+    /*  Make our child window, and add
+	a border and some text to it.   */
+
+    childwin = subwin(mainwin, height, width, y, x);
+    box(childwin, 0, 0);
+    mvwaddstr(childwin, 1, 4, "Move the window");
+    mvwaddstr(childwin, 2, 2, "with the arrow keys");
+    mvwaddstr(childwin, 3, 6, "or HOME/END");
+    mvwaddstr(childwin, 5, 3, "Press 'q' to quit");
+
+    refresh();
+
+
+    /*  Loop until user hits 'q' to quit  */
+
+    while ( (ch = getch()) != 'q' ) {
+
+	switch ( ch ) {
+
+	case KEY_UP:
+	    if ( y > 0 )
+		--y;
+	    break;
+
+	case KEY_DOWN:
+	    if ( y < (rows - height) )
+		++y;
+	    break;
+
+	case KEY_LEFT:
+	    if ( x > 0 )
+		--x;
+	    break;
+
+	case KEY_RIGHT:
+	    if ( x < (cols - width) )
+		++x;
+	    break;
+
+	case KEY_HOME:
+	    x = 0;
+	    y = 0;
+	    break;
+
+	case KEY_END:
+	    x = (cols - width);
+	    y = (rows - height);
+	    break;
+
+	}
+
+	mvwin(childwin, y, x);
+    }
+
+
+    /*  Clean up after ourselves  */
+
+    delwin(childwin);
+    delwin(mainwin);
+    endwin();
+    refresh();
+
+    return EXIT_SUCCESS;
 }

@@ -60,7 +60,6 @@ int promptBoardSize() {
         printf("Error: invalid input.\n\n");
         return promptBoardSize();
     }
-    printf("sz: %d\n", size);
     return size;
 }
 
@@ -75,7 +74,6 @@ int promptDifficulty() {
         printf("Error: invalid input.\n\n");
         return promptDifficulty();
     }
-    printf("diff: %d\n", difficulty);
     return difficulty;
 }
 

@@ -213,10 +213,11 @@ bool existsOnBoard(char* userInput) {
 void hideWords(int difficulty) {
     int level = 8 - difficulty;
     int tempIndex = wordIndex / level;
-    //Make sure it isn't 0
-    tempIndex += 1;
-    for (int i = 0; i < tempIndex; i++) {
-        wordList[i].hidden = true;
+    
+    printf("TEMP INDEX: %d  WORD INDEX: %d\n", tempIndex, wordIndex);
+    for (int i = tempIndex; i < wordIndex; i++) {
+        int randomWord = rand() % wordIndex;
+        wordList[randomWord].hidden = true;
     }
 }
 
@@ -229,7 +230,7 @@ int* userFindWords(boggleBoard** board, int size,
     
     printf("\n\nPLAYER 1: \n");
     char userInput[1000];
-    printf("Enter word to check (q): \n");
+    printf("Enter word to check (q to quit): \n");
     scanf("%s", userInput);
     for (int i = 0; i < strlen(userInput); i++) {
         userInput[i] = tolower(userInput[i]);
