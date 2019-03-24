@@ -12,7 +12,7 @@ void freeBoggleBoard(boggleBoard** board, int size);
 void displayBoard(int size, boggleBoard** board);
 
 typedef struct trieNode {
-    struct trieNode *characters[26]; 
+    struct trieNode *characters[30]; 
     bool isLeaf;
 } trieNode;
 trieNode* createTrieNode();

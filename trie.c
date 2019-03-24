@@ -16,7 +16,7 @@ static list* wordList;
 trieNode* createTrieNode() {
     trieNode* tNode = (struct trieNode*)malloc(sizeof(trieNode));
     tNode->isLeaf = false;
-    for (int i = 0; i < 26; i++) {
+    for (int i = 0; i < 30; i++) {
         tNode->characters[i] = NULL;
     }
     return tNode;
@@ -41,6 +41,7 @@ void insertTrieNode(trieNode* root, char* word) {
     }
     //End of word is marked as a leaf
     tCurrent->isLeaf = true;
+    return;
 }
 
 
@@ -213,7 +214,18 @@ bool existsOnBoard(char* userInput) {
 void hideWords(int difficulty) {
     int level = 8 - difficulty;
     int tempIndex = wordIndex / level;
+
+    //Hide certain word complexities
+    for (int i = 0; i < wordIndex; i++) {
+        if (difficulty == 1 && strlen(wordList[i]. word) > 3)
+            wordList[i].hidden = true;
+        if (difficulty == 2 && strlen(wordList[i]. word) > 4)
+            wordList[i].hidden = true;
+        if (difficulty == 3 && strlen(wordList[i]. word) > 5)
+            wordList[i].hidden = true;
+    }
     
+    //Hide random bunches of words
     for (int i = tempIndex; i < wordIndex; i++) {
         int randomWord = rand() % wordIndex;
         wordList[randomWord].hidden = true;
