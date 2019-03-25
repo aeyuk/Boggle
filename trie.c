@@ -251,9 +251,9 @@ int* userFindWords(boggleBoard** board, int size,
     while (strcmp(userInput, "q") != 0) {
         //If word is not in the dictionary or not on the board
         if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
-            printf("Invalid word!\n\n");
+            printf("Invalid word!\n");
         }
-    scanf("%s", userInput);
+        scanf("%s", userInput);
     }
 
     //Player points @index 0; cpu points @index 1
@@ -262,26 +262,46 @@ int* userFindWords(boggleBoard** board, int size,
     printf("\n");
     printf(".................................................................\n");
     printf("\nCOMPUTER FOUND:\n");
+    int lw = 0;
+    int flag = 0; //Line wrappers
     for (int i = 0; i < wordIndex; i++) {
-        if (wordList[i].playerFound == true)
-            printf("%s  X\n", wordList[i].word);
+        if (wordList[i].playerFound == true) {
+            printf("X%sX\t", wordList[i].word);
+            lw++;
+            flag = 0;
+        }
         else if (!wordList[i].hidden && !wordList[i].playerFound) {
-            printf("%s\n", wordList[i].word);
+            printf("%s\t", wordList[i].word);
             pointsArray[1] += calculateScore(wordList[i].word);
+            lw++;
+            flag = 0;
+        }
+        if (lw % 20 == 0 && lw != 0 && flag == 0) {
+            flag = 1;
+            printf("\n");
         }
     }
     printf("\n.................................................................\n");
 
 
     printf("\n");
-    printf("\nYOU FOUND:\n");
+    printf("YOU FOUND:\n");
+    lw = 0;
     for (int i= 0; i < wordIndex; i++) {
         if (wordList[i].playerFound && !wordList[i].hidden) {
-            printf("%s  X\n", wordList[i].word);
+            printf("X%sX\t", wordList[i].word);
+            lw++;
+            flag = 0;
         }
         else if (wordList[i].playerFound && wordList[i].hidden) {
-            printf("%s \n", wordList[i].word);
+            printf("%s\t", wordList[i].word);
             pointsArray[0] += calculateScore(wordList[i].word);
+            lw++;
+            flag = 0;
+        }
+        if (lw % 20 == 0 && lw != 0 && flag == 0) {
+            flag = 1;
+            printf("\n");
         }
     }
     printf("\n.................................................................\n");
@@ -296,12 +316,19 @@ void printMissed() {
     system("clear");
     printf(".................................................................\n");
     printf("WORDS YOU MISSED: \n");
+    int lw = 0; //Line wrapper
+    int flag = 0;
     for (int i = 0; i < wordIndex; i++) {
-        if (!wordList[i].playerFound)
+        if (!wordList[i].playerFound) {
             printf("%s\t", wordList[i].word);
-        if (i % 8 == 0 && i != 0) printf("\n");
+            lw++;
+            flag = 0;
+        }
+        if (lw % 20 == 0 && lw != 0 && flag == 0) {
+            flag = 1;
+            printf("\n");
+        }
     }
-    printf("\n");
-    printf(".................................................................\n");
+    printf("\n.................................................................\n");
 
 }

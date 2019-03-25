@@ -57,10 +57,10 @@ int main(void) {
 
     //Prompt player for difficulty, halt on invalid input
     int difficulty = promptDifficulty();
-    printf("%d\n", difficulty);
-
 
     //Create and display board on screen
+    system("clear");
+    printf("-------WELCOME TO BOGGLE-------\n");
     boggleBoard** board = initializeBoard(size);
     displayBoard(size, board);
 
