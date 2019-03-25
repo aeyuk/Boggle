@@ -51,7 +51,6 @@ int main(void) {
     char command[20];
 
     while(strcmp(command, "q") != 0) {
-
     //Prompt player for board size, halt on invalid input
     int size = promptBoardSize();
 

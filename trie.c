@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <time.h>
 
 #include "game.h"
 
@@ -241,20 +242,24 @@ int* userFindWords(boggleBoard** board, int size,
     
     printf("\n\nPLAYER 1: \n");
     char userInput[1000];
-    printf("Start finding words! \n");
+    printf("Start finding words! You have three minutes! (Press q to quit early) \n");
     scanf("%s", userInput);
-    for (int i = 0; i < strlen(userInput); i++) {
-        
-        //add invalid input catcher
-        userInput[i] = tolower(userInput[i]);
-    }
+    //Play for three minutes
+    unsigned int retTime = time(0) + 10;
+
     while (strcmp(userInput, "q") != 0) {
+        for (int i = 0; i < strlen(userInput); i++) {
+            userInput[i] = tolower(userInput[i]);
+        }
         //If word is not in the dictionary or not on the board
         if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
             printf("Invalid word!\n");
         }
+        if (time(0) > retTime) break;
         scanf("%s", userInput);
     }
+
+    printf("\n TIME'S UP! \n");
 
     //Player points @index 0; cpu points @index 1
     static int pointsArray[2];
@@ -265,7 +270,7 @@ int* userFindWords(boggleBoard** board, int size,
     int lw = 0;
     int flag = 0; //Line wrappers
     for (int i = 0; i < wordIndex; i++) {
-        if (wordList[i].playerFound == true) {
+        if (wordList[i].playerFound) {
             printf("X%sX\t", wordList[i].word);
             lw++;
             flag = 0;
@@ -293,7 +298,7 @@ int* userFindWords(boggleBoard** board, int size,
             lw++;
             flag = 0;
         }
-        else if (wordList[i].playerFound && wordList[i].hidden) {
+        else if (wordList[i].playerFound) {
             printf("%s\t", wordList[i].word);
             pointsArray[0] += calculateScore(wordList[i].word);
             lw++;
@@ -324,7 +329,7 @@ void printMissed() {
             lw++;
             flag = 0;
         }
-        if (lw % 20 == 0 && lw != 0 && flag == 0) {
+        if (lw % 10 == 0 && lw != 0 && flag == 0) {
             flag = 1;
             printf("\n");
         }

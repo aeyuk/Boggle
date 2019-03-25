@@ -6,7 +6,6 @@ int promptBoardSize();
 int checkInput(char* size, char* type);
 int promptDifficulty();
 int checkDifficulty(int difficulty);
-void delay(int numSeconds);
 boggleBoard** initializeBoard(int size);
 void freeBoggleBoard(boggleBoard** board, int size);
 void displayBoard(int size, boggleBoard** board);
