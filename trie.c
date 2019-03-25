@@ -245,7 +245,7 @@ int* userFindWords(boggleBoard** board, int size,
     printf("Start finding words! You have three minutes! (Press q to quit early) \n");
     scanf("%s", userInput);
     //Play for three minutes
-    unsigned int retTime = time(0) + 10;
+    unsigned int retTime = time(0) + 180;
 
     while (strcmp(userInput, "q") != 0) {
         for (int i = 0; i < strlen(userInput); i++) {
