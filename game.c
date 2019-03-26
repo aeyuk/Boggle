@@ -51,76 +51,76 @@ int main(void) {
     char command[20];
 
     while(strncmp(command, "q", strlen(command)) != 0) {
-    //Prompt player for board size, halt on invalid input
-    int size = promptBoardSize();
+        //Prompt player for board size, halt on invalid input
+        int size = promptBoardSize();
 
-    //Prompt player for difficulty, halt on invalid input
-    int difficulty = promptDifficulty();
+        //Prompt player for difficulty, halt on invalid input
+        int difficulty = promptDifficulty();
 
-    //Create and display board on screen
-    system("clear");
-    printf("-------WELCOME TO BOGGLE-------\n");
+        //Create and display board on screen
+        system("clear");
+        printf("-------WELCOME TO BOGGLE-------\n");
 
-    boggleBoard** board = initializeBoard(size);
-    displayBoard(size, board);
-
-
-    //Computer: find all possible words on boggle board
-    computerFindWords(board, size, root);
+        boggleBoard** board = initializeBoard(size);
+        displayBoard(size, board);
 
 
-    //User: plays and finds words
-    //Array holds player points, computer points
-    int* pointsArray;
-
-    pointsArray = userFindWords(board, size, root, difficulty);
-    int playerPoints = pointsArray[0];
-    int cpuPoints = pointsArray[1];
-
-    //Print score totals
-
-    printf("\nYou scored: %d points\n", playerPoints);
-    printf("Computer scored: %d points\n\n", cpuPoints);
-    printf(".................................................................\n");
+        //Computer: find all possible words on boggle board
+        computerFindWords(board, size, root);
 
 
-    //Incrememnt winner's score
-    if (cpuPoints > playerPoints) {
-        printf("\nComputer wins!\n");
-        cpuScore++;
-    }
-    else if (playerPoints > cpuPoints) {
-        printf("\nYou win!\n");
-        playerScore++;
-    }
-    else printf("Tie! No points given\n");
+        //User: plays and finds words
+        //Array holds player points, computer points
+        int* pointsArray;
+
+        pointsArray = userFindWords(board, size, root, difficulty);
+        int playerPoints = pointsArray[0];
+        int cpuPoints = pointsArray[1];
+
+        //Print score totals
+
+        printf("\nYou scored: %d points\n", playerPoints);
+        printf("Computer scored: %d points\n\n", cpuPoints);
+        printf(".................................................................\n");
 
 
-    printf("\n.................................................................\n");
+        //Incrememnt winner's score, declare winner
+        if (cpuPoints > playerPoints) {
+            printf("\nComputer wins!\n");
+            cpuScore++;
+        }
+        else if (playerPoints > cpuPoints) {
+            printf("\nYou win!\n");
+            playerScore++;
+        }
+        else printf("Tie! No points given\n");
 
 
-    //Print standings
-    printf("\n\nSTANDINGS:\n");
-    printf("Player 1: %d \t Computer: %d\n\n", playerScore, cpuScore);
-
-    printf(".................................................................\n");
+        printf("\n.................................................................\n");
 
 
-    printf("See the words you missed? (Enter 'y' to see)\n");
-    scanf("%s", command);
-    if (strncmp(command, "y", strlen(command)) == 0) {
-        printMissed();
-    }
+        //Print standings
+        printf("\n\nSTANDINGS:\n");
+        printf("Player 1: %d \t Computer: %d\n\n", playerScore, cpuScore);
+
+        printf(".................................................................\n");
+
+        //Print words missed by user
+        printf("See the words you missed? (Enter 'y' to see)\n");
+        scanf("%s", command);
+        if (strncmp(command, "y", strlen(command)) == 0) {
+            printMissed();
+        }
 
 
-    //Reset game
-    freeBoggleBoard(board, size);
-    memset(pointsArray, 0, size);
+        //Reset game
+        freeBoggleBoard(board, size);
+        memset(pointsArray, 0, size);
 
-
-    printf("Play again? (Enter any character to continue; Enter q to stop)\n");
-    scanf("%s", command);
-    system("clear");
+        //Ask to play again or end
+        printf("Play again? (Enter any character to continue; Enter q to stop)\n");
+        scanf("%s", command);
+        system("clear");
     }
 
 }

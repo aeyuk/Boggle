@@ -13,6 +13,7 @@ static list* wordList;
 
 
 //https://www.techiedelight.com/trie-implementation-insert-search-delete/
+//General trie implementation sourced and modified
 //Creates and returns a new trie node, initialized to NULLs
 trieNode* createTrieNode() {
     trieNode* tNode = (struct trieNode*)malloc(sizeof(trieNode));
@@ -131,13 +132,17 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     counter++;
     //Check dictionary to validate prefix and print word to screen
     int searchCheck = searchTrie(tCurrent, userWord);
-    //Valid word
+    //Valid word!
     if (strlen(userWord) >= 3 && searchCheck == 1) { 
         //Check for duplicates, add to list if new
         checkInlist(userWord);
     }
 
-    //Recursively check adjacent letters to find words
+    //Outline of recursive loops sourced here:
+    //https://www.geeksforgeeks.org/boggle-find-possible-words-board-characters/
+    //Modified to store words and pass other necessary variables
+
+    //Recursively check adjacent letters to find words if userWord is prefix
     if (searchCheck != -1) {
         for (int row=i-1; row<=i+1; row++) {
             for (int col=j-1; col<=j+1; col++) {
@@ -170,7 +175,7 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     //Allocate space for list of words
     //Assume max wordlist would be all the words in the dictionary
     wordList = (list*) malloc (480000 * sizeof(wordList));
-    for (int i = 0; i < 48000; i++) {
+    for (int i = 0; i < 480000; i++) {
         wordList[i].word = malloc(size*size*2 * sizeof(char));
         wordList[i].playerFound = false;
         wordList[i].hidden = false;
@@ -179,6 +184,7 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
     struct trieNode* tCurrent = root;
     //Hold index of current spot in userWord string
     int counter = 0;
+    //Assume max size of word would be a board of Qu's
     char userWord[size*size*2];
     
     //Find all possible words for every letter in the board
@@ -241,7 +247,9 @@ int* userFindWords(boggleBoard** board, int size,
     hideWords(difficulty);
     
     printf("\n\nPLAYER 1: \n");
-    char userInput[1000];
+
+    //Assume max size of word would be a board of Qu's
+    char userInput[size*size*2];
 
     //Play for three minutes
     // /https://stackoverflow.com/questions/3930363/implement-time-delay-in-c
@@ -256,6 +264,7 @@ int* userFindWords(boggleBoard** board, int size,
         if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
             printf("Invalid word!\n");
         }
+        //Break if over time limit (user gets one more chance to check word)
         if (time(0) > retTime) break;
         scanf("%s", userInput);
     }
@@ -271,17 +280,20 @@ int* userFindWords(boggleBoard** board, int size,
     int lw = 0;
     int flag = 0; //Line wrappers
     for (int i = 0; i < wordIndex; i++) {
+        //X's mark words found in common (no points given)
         if (wordList[i].playerFound) {
             printf("X%sX\t", wordList[i].word);
             lw++;
             flag = 0;
         }
+        //Print unique words, calculate score
         else if (!wordList[i].hidden && !wordList[i].playerFound) {
             printf("%s\t", wordList[i].word);
             pointsArray[1] += calculateScore(wordList[i].word);
             lw++;
             flag = 0;
         }
+        //Control line wrappers
         if (lw % 20 == 0 && lw != 0 && flag == 0) {
             flag = 1;
             printf("\n");
@@ -294,17 +306,20 @@ int* userFindWords(boggleBoard** board, int size,
     printf("YOU FOUND:\n");
     lw = 0;
     for (int i= 0; i < wordIndex; i++) {
+        //X's mark words found in common (no points given)
         if (wordList[i].playerFound && !wordList[i].hidden) {
             printf("X%sX\t", wordList[i].word);
             lw++;
             flag = 0;
         }
+        //Print unique words, calculate score
         else if (wordList[i].playerFound) {
             printf("%s\t", wordList[i].word);
             pointsArray[0] += calculateScore(wordList[i].word);
             lw++;
             flag = 0;
         }
+        //Control line wrappers
         if (lw % 20 == 0 && lw != 0 && flag == 0) {
             flag = 1;
             printf("\n");
@@ -312,12 +327,13 @@ int* userFindWords(boggleBoard** board, int size,
     }
     printf("\n.................................................................\n");
 
-
+    //Free memory
     freeWordlist();
     
     return pointsArray;
 }
 
+//Print all the words user did not find 
 void printMissed() {
     system("clear");
     printf(".................................................................\n");

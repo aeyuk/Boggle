@@ -78,7 +78,7 @@ int promptDifficulty() {
 }
 
 
-
+//Free memory
 void freeBoggleBoard(boggleBoard** board, int size) {
     for (int i = 0; i < size; i++) {
         free(board[i]);
