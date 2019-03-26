@@ -17,7 +17,7 @@ static list* wordList;
 trieNode* createTrieNode() {
     trieNode* tNode = (struct trieNode*)malloc(sizeof(trieNode));
     tNode->isLeaf = false;
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 27; i++) {
         tNode->characters[i] = NULL;
     }
     return tNode;
@@ -98,13 +98,13 @@ int calculateScore(char* word) {
 void checkInlist(char* userWord) {
     bool duplicate = false;
     for (int i = 0; i <= wordIndex; i++) {
-        if (strcmp(userWord, wordList[i].word) == 0) {
+        if (strncmp(userWord, wordList[i].word, strlen(userWord)) == 0) {
             duplicate = true;
         }
     }
     if (duplicate == false) {
         wordIndex++;
-        strcpy(wordList[wordIndex].word, userWord);
+        strncpy(wordList[wordIndex].word, userWord, strlen(userWord));
     }
 }
 
@@ -201,7 +201,7 @@ bool existsOnBoard(char* userInput) {
     bool check = false;
     for (int i = 0; i <= wordIndex; i++) {
         //If on the board
-        if (strcmp(userInput, wordList[i].word) == 0) {
+        if (strncmp(userInput, wordList[i].word, strlen(userInput)) == 0) {
             //Mark word in common
             wordList[i].playerFound = true;
             check = true;
@@ -242,12 +242,13 @@ int* userFindWords(boggleBoard** board, int size,
     
     printf("\n\nPLAYER 1: \n");
     char userInput[1000];
-    printf("Start finding words! You have three minutes! (Press q to quit early) \n");
-    scanf("%s", userInput);
-    //Play for three minutes
-    unsigned int retTime = time(0) + 180;
 
-    while (strcmp(userInput, "q") != 0) {
+    //Play for three minutes
+    // /https://stackoverflow.com/questions/3930363/implement-time-delay-in-c
+    unsigned int retTime = time(0) + 180;
+    printf("Start finding words! You have three minutes! (Enter q to quit early) \n");
+    scanf("%s", userInput);
+    while (strncmp(userInput, "q", strlen(userInput)) != 0) {
         for (int i = 0; i < strlen(userInput); i++) {
             userInput[i] = tolower(userInput[i]);
         }

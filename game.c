@@ -14,8 +14,8 @@ int main(void) {
     //Open dictionary file
     char word[1000];
     FILE *fp;
-    fp = fopen("linuxwords.txt", "r");
-    //fp = fopen("/usr/share/dict/words", "r");
+    //fp = fopen("linuxwords.txt", "r");
+    fp = fopen("/usr/share/dict/words", "r");
     if (fp == NULL) {
         printf("Error: words file could not be found\n");
         return 1;
@@ -50,7 +50,7 @@ int main(void) {
     int cpuScore = 0;
     char command[20];
 
-    while(strcmp(command, "q") != 0) {
+    while(strncmp(command, "q", strlen(command)) != 0) {
     //Prompt player for board size, halt on invalid input
     int size = promptBoardSize();
 
@@ -60,6 +60,7 @@ int main(void) {
     //Create and display board on screen
     system("clear");
     printf("-------WELCOME TO BOGGLE-------\n");
+
     boggleBoard** board = initializeBoard(size);
     displayBoard(size, board);
 
@@ -107,7 +108,7 @@ int main(void) {
 
     printf("See the words you missed? (Enter 'y' to see)\n");
     scanf("%s", command);
-    if (strcmp(command, "y") == 0) {
+    if (strncmp(command, "y", strlen(command)) == 0) {
         printMissed();
     }
 

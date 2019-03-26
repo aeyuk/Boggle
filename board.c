@@ -30,7 +30,7 @@ int checkInput(char* input, char* type) {
         }
     }
     //Handle size parameters
-    if (strcmp(type, "size") == 0) {
+    if (strncmp(type, "size", strlen(type)) == 0) {
         //Words must be at least 3 letters long, so min board size = 2x2
         if (numInput < 2) {
             return -1;
@@ -39,7 +39,7 @@ int checkInput(char* input, char* type) {
         return numInput;
     }
     //Handle difficulty parameters
-    else if (strcmp(type, "difficulty") == 0) {
+    else if (strncmp(type, "difficulty", strlen(type)) == 0) {
         if (numInput < 1 || numInput > 5) {
             return -1;
         }
