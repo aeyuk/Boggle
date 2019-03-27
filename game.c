@@ -14,7 +14,7 @@ int main(void) {
     //Open dictionary file
     char word[1000];
     FILE *fp;
-    //fp = fopen("linuxwords.txt", "r");
+    
     fp = fopen("/usr/share/dict/words", "r");
     if (fp == NULL) {
         printf("Error: words file could not be found\n");
@@ -24,17 +24,31 @@ int main(void) {
     //Create root node
     struct trieNode* root = createTrieNode();
 
+    //Invalid words include proper nouns and any non-alpha chars
+    bool properNoun = false;
+    bool invalid = false;
 
     //Read words file and construct trie
     while (fgets(word, 1000, fp) != NULL) {
-        for (int i = 0; i < strlen(word); i++) {
-            if (word[i] == '\n') {
-                word[i] = '\0';
-            }
-            //Convert all letters to lowercase
-            word[i] = tolower(word[i]);
+        //Skip proper nouns
+        if ((int)word[0] >= 65 && (int)word[0] <= 90) {
+            properNoun = true;
         }
-        insertTrieNode(root, word);
+        if (!properNoun) {
+            for (int i = 0; i < strlen(word); i++) {
+                //Get rid of new lines
+                if (word[i] == '\n') {
+                    word[i] = '\0';
+                }
+                //Convert all letters to lowercase
+                word[i] = tolower(word[i]);
+            }
+            if (!invalid)
+            insertTrieNode(root, word);
+        }
+        //Reset flags
+        properNoun = false;
+        invalid = false;
     }
 
     //Close file
@@ -50,7 +64,7 @@ int main(void) {
     int cpuScore = 0;
     char command[20];
 
-    while(strncmp(command, "q", strlen(command)) != 0) {
+    while(strncmp(command, "q", 1) != 0) {
         //Prompt player for board size, halt on invalid input
         int size = promptBoardSize();
 
@@ -106,9 +120,9 @@ int main(void) {
         printf(".................................................................\n");
 
         //Print words missed by user
-        printf("See the words you missed? (Enter 'y' to see)\n");
+        printf("See the words you missed? (Enter 'y' to see, any other character to skip)\n");
         scanf("%s", command);
-        if (strncmp(command, "y", strlen(command)) == 0) {
+        if (strncmp(command, "y", 1) == 0) {
             printMissed();
         }
 

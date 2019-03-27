@@ -76,6 +76,9 @@ int searchTrie(trieNode* root, char* word) {
 
 //Free memory
 void freeWordlist() {
+    for (int i = 0; i < 480000; i++) {
+        free(wordList[i].word);
+    }
     free(wordList);
 }
 
@@ -99,13 +102,13 @@ int calculateScore(char* word) {
 void checkInlist(char* userWord) {
     bool duplicate = false;
     for (int i = 0; i <= wordIndex; i++) {
-        if (strncmp(userWord, wordList[i].word, strlen(userWord)) == 0) {
+        if (strcmp(userWord, wordList[i].word) == 0) {
             duplicate = true;
         }
     }
     if (duplicate == false) {
         wordIndex++;
-        strncpy(wordList[wordIndex].word, userWord, strlen(userWord));
+        strcpy(wordList[wordIndex].word, userWord);
     }
 }
 
@@ -174,7 +177,7 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
 
     //Allocate space for list of words
     //Assume max wordlist would be all the words in the dictionary
-    wordList = (list*) malloc (480000 * sizeof(wordList));
+    wordList = (list*) malloc (4800000 * sizeof(wordList));
     for (int i = 0; i < 480000; i++) {
         wordList[i].word = malloc(size*size*2 * sizeof(char));
         wordList[i].playerFound = false;
@@ -207,7 +210,7 @@ bool existsOnBoard(char* userInput) {
     bool check = false;
     for (int i = 0; i <= wordIndex; i++) {
         //If on the board
-        if (strncmp(userInput, wordList[i].word, strlen(userInput)) == 0) {
+        if (strncmp(userInput, wordList[i].word, strlen(wordList[i].word)) == 0) {
             //Mark word in common
             wordList[i].playerFound = true;
             check = true;
@@ -251,19 +254,35 @@ int* userFindWords(boggleBoard** board, int size,
     //Assume max size of word would be a board of Qu's
     char userInput[size*size*2];
 
+    bool invalid = false;
+
     //Play for three minutes
     // /https://stackoverflow.com/questions/3930363/implement-time-delay-in-c
     unsigned int retTime = time(0) + 180;
     printf("Start finding words! You have three minutes! (Enter q to quit early) \n");
     scanf("%s", userInput);
-    while (strncmp(userInput, "q", strlen(userInput)) != 0) {
+    while (strncmp(userInput, "q", 1) != 0) {
         for (int i = 0; i < strlen(userInput); i++) {
-            userInput[i] = tolower(userInput[i]);
+            //No invalid characters found yet
+            if (!invalid) {
+                if (!isalpha(userInput[i])) {
+                    //Invalid characters found
+                    printf("Invalid characters!\n");
+                    invalid = true;
+                }
+                //Convert to lowercase
+                userInput[i] = tolower(userInput[i]);
+            }
         }
-        //If word is not in the dictionary or not on the board
-        if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
-            printf("Invalid word!\n");
+        //If no invalid characters
+        if (!invalid) {
+            //If word is not in the dictionary or not on the board
+            if (!searchTrie(root, userInput) || !existsOnBoard(userInput))  {
+                printf("Invalid word!\n");
+            }
         }
+        //Reset invalid character flag
+        invalid = false;
         //Break if over time limit (user gets one more chance to check word)
         if (time(0) > retTime) break;
         scanf("%s", userInput);
@@ -301,6 +320,7 @@ int* userFindWords(boggleBoard** board, int size,
     }
     printf("\n.................................................................\n");
 
+//FIX THE NUMBERS DAMN IT!!
 
     printf("\n");
     printf("YOU FOUND:\n");
@@ -326,9 +346,6 @@ int* userFindWords(boggleBoard** board, int size,
         }
     }
     printf("\n.................................................................\n");
-
-    //Free memory
-    freeWordlist();
     
     return pointsArray;
 }
@@ -344,7 +361,7 @@ void printMissed() {
         if (!wordList[i].playerFound) {
             printf("%s\t", wordList[i].word);
             lw++;
-            flag = 0;
+           flag = 0;
         }
         if (lw % 10 == 0 && lw != 0 && flag == 0) {
             flag = 1;
@@ -353,4 +370,6 @@ void printMissed() {
     }
     printf("\n.................................................................\n");
 
+    //Free memory
+    freeWordlist();
 }
