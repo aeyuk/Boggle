@@ -76,7 +76,7 @@ int main(void) {
     int cpuScore = 0;
     char command[20];
 
-    while(strncmp(command, "q", 1) != 0) {
+    while(strcmp(command, "q") != 0) {
         //Prompt player for board size, halt on invalid input
         int size = promptBoardSize();
 
@@ -134,7 +134,7 @@ int main(void) {
         //Print words missed by user
         printf("See the words you missed? (Enter 'y' to see, any other character to skip)\n");
         scanf("%s", command);
-        if (strncmp(command, "y", 1) == 0) {
+        if (strcmp(command, "y") == 0) {
             printMissed();
         }
 
