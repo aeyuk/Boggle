@@ -116,32 +116,21 @@ boggleBoard** initializeBoard(int size) {
 
 //Print board with arbitrary size to screen 
 void displayBoard(int size, boggleBoard** board) {
-    int j = size;
-    while (j != 0) {
-        printf("____");
-        j--;
-    }
-    printf("\n\n");
+    printf("\n");
 
     for (int i = 0; i < size; i++) {
-        printf("|  ");
+        printf("| ");
         for (int j = 0; j < size; j++) {
             if (board[i][j].letter == 'Q')
-                printf("Qu ");
+                printf("Qu");
             else
-                printf("%c  ", board[i][j].letter);
+                printf("%c ", board[i][j].letter);
             if (j == size - 1)
                 printf("|");
             board[i][j].letter = tolower(board[i][j].letter);
         }
         printf("\n");
     }
-
-    while (j != size) {
-        printf("____");
-        j++;
-    }
-    printf("\n");
     return;
 }
 
