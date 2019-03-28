@@ -196,9 +196,10 @@ void computerFindWords(boggleBoard** board, int size, trieNode* root) {
 
     //Allocate space for list of words
     //Assume max wordlist would be all the words in the dictionary
-    wordList = (list*) malloc (4800000 * sizeof(wordList));
+    //Assume 47 is largest word in dictionary
+    wordList = (list*) malloc (sizeof(list) * 480000);
     for (int i = 0; i < 480000; i++) {
-        wordList[i].word = malloc(size*size*2 * sizeof(char));
+        wordList[i].word = (char*)malloc(47 * sizeof(char));
         wordList[i].playerFound = false;
         wordList[i].hidden = false;
     }
@@ -206,13 +207,13 @@ void computerFindWords(boggleBoard** board, int size, trieNode* root) {
     trieNode* tCurrent = root;
     //Hold index of current spot in userWord string
     int counter = 0;
-    //Assume max size of word would be a board of Qu's
-    char userWord[size*size*2];
+    //Assume max size of word is longest word in dicitonary
+    char userWord[47];
     
     //Find all possible words for every letter in the board
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            memset(userWord, '\0', size*size*2);
+            memset(userWord, '\0', 47);
             counter = 0;
             computerFindWordsHelper(board, i, j, size, 
             userWord, counter, tCurrent);
@@ -270,8 +271,8 @@ int* userFindWords(boggleBoard** board, int size,
     
     printf("\n\nPLAYER 1: \n");
 
-    //Assume max size of word would be a board of Qu's
-    char userInput[size*size*2];
+    //Assume max size of word would be longest word in dictionary
+    char userInput[47];
 
     bool invalid = false;
 
