@@ -2,7 +2,16 @@
 Cate Yuk
 
 ## Description
-This project is the game of Boggle coded in C. The implementation involves a dictionary read in through a file, with the words being stored in a trie. Valid words are found using a Depth First Search. A user finds words against a computer.
+This project is the game of Boggle coded in C. The implementation involves a dictionary read in through a file, with the words being stored in a trie. Valid words are found using a Depth First Search. A user finds words against a computer. The game follows the standard rules of boggle, excluding the standardized distribution of letters on cubes and board sizes. 
+
+
+## Downloading and Compiling
+Clone the repository from terminal, or download the zip and extract the files.
+```bash
+git clone https://github.com/aeyuk/Boggle.git
+```
+
+Build the project using `make` and execute using `./boggle`
 
 ## Link to Project Video
 [Boggle Demonstration](https://www.youtube.com/watch?v=u_twsVHbKwY&feature=youtu.be)
