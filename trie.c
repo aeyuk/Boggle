@@ -165,7 +165,6 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     userWord[counter-1] = '\0';
 
     board[i][j].picked = false;
-    //printf("Userword garbage: %s\n", userWord);
 }
 
 
@@ -257,7 +256,7 @@ int* userFindWords(boggleBoard** board, int size,
     bool invalid = false;
 
     //Play for three minutes
-    // /https://stackoverflow.com/questions/3930363/implement-time-delay-in-c
+    //https://stackoverflow.com/questions/3930363/implement-time-delay-in-c
     unsigned int retTime = time(0) + 180;
     printf("Start finding words! You have three minutes! (Enter q to quit early) \n");
     scanf("%s", userInput);
@@ -319,8 +318,6 @@ int* userFindWords(boggleBoard** board, int size,
         }
     }
     printf("\n.................................................................\n");
-
-//FIX THE NUMBERS DAMN IT!!
 
     printf("\n");
     printf("YOU FOUND:\n");

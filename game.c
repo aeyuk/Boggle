@@ -36,6 +36,10 @@ int main(void) {
         }
         if (!properNoun) {
             for (int i = 0; i < strlen(word); i++) {
+                //Check for invalid characters
+                if (!isalpha(word[i]) && word[i] != '\n' && word[i] != '\0') {
+                    invalid = true;
+                }
                 //Get rid of new lines
                 if (word[i] == '\n') {
                     word[i] = '\0';
@@ -44,7 +48,7 @@ int main(void) {
                 word[i] = tolower(word[i]);
             }
             if (!invalid)
-            insertTrieNode(root, word);
+                insertTrieNode(root, word);
         }
         //Reset flags
         properNoun = false;

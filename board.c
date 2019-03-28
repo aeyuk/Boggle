@@ -53,7 +53,7 @@ int checkInput(char* input, char* type) {
 //Prompt player to enter board size
 int promptBoardSize() {
     char tempSize[10];
-    printf("Enter size of board (excessively large inputs may disrupt viewing): \n");
+    printf("Enter size of board (excessively large inputs may disrupt viewing, size 60 guarantees scrolling): \n");
     scanf("%s", tempSize);
     int size = checkInput(tempSize, "size");
     if (size == -1) {
