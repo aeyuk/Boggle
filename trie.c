@@ -16,7 +16,7 @@ static list* wordList;
 //General trie implementation sourced and modified
 //Creates and returns a new trie node, initialized to NULLs
 trieNode* createTrieNode() {
-    trieNode* tNode = (struct trieNode*)malloc(sizeof(trieNode));
+    trieNode* tNode = (trieNode*)malloc(sizeof(trieNode));
     tNode->isLeaf = false;
     for (int i = 0; i < 27; i++) {
         tNode->characters[i] = NULL;
@@ -49,7 +49,7 @@ void insertTrieNode(trieNode* root, char* word) {
 
 
 int searchTrie(trieNode* root, char* word) {
-    struct trieNode* tCurrent = root;
+    trieNode* tCurrent = root;
     int index;
 
     //Return false if the trie is empty
@@ -74,13 +74,33 @@ int searchTrie(trieNode* root, char* word) {
     return (tCurrent->isLeaf);
 }
 
-//Free memory
+//Free wordList memory
 void freeWordlist() {
     for (int i = 0; i < 480000; i++) {
         free(wordList[i].word);
     }
     free(wordList);
 }
+
+
+void freeNode(trieNode* tCurrent) {
+    for (int i = 0; i < 27; i++) {
+        if (tCurrent->characters[i] != NULL) {
+            freeNode(tCurrent->characters[i]);
+        }
+    }
+    free(tCurrent);
+}
+
+
+//Free trie memory
+void freeTrie(trieNode* root) {
+    if (root != NULL) {
+        trieNode* tCurrent = root;
+        freeNode(tCurrent);
+    }
+}
+
 
 
 
@@ -122,7 +142,7 @@ bool inRange (boggleBoard** board, int size, int i, int j) {
 
 //Helper function to find all possible words
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, 
-                char* userWord, int counter, struct trieNode* tCurrent) {
+                char* userWord, int counter, trieNode* tCurrent) {
     //Select letter
     board[i][j].picked = true;
     //Add letter to string
@@ -170,7 +190,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
 
 
 //Computer finds all possible words on baord
-void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
+void computerFindWords(boggleBoard** board, int size, trieNode* root) {
     //Reset index
     wordIndex = -1;
 
@@ -183,7 +203,7 @@ void computerFindWords(boggleBoard** board, int size, struct trieNode* root) {
         wordList[i].hidden = false;
     }
 
-    struct trieNode* tCurrent = root;
+    trieNode* tCurrent = root;
     //Hold index of current spot in userWord string
     int counter = 0;
     //Assume max size of word would be a board of Qu's
@@ -243,7 +263,7 @@ void hideWords(int difficulty) {
 
 //User enters words to play
 int* userFindWords(boggleBoard** board, int size, 
-                  struct trieNode* root, int difficulty) {
+                trieNode* root, int difficulty) {
     
     //Hide computer-found words based on difficulty
     hideWords(difficulty);
@@ -343,7 +363,7 @@ int* userFindWords(boggleBoard** board, int size,
         }
     }
     printf("\n.................................................................\n");
-    
+
     return pointsArray;
 }
 

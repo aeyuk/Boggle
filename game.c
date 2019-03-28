@@ -152,5 +152,6 @@ int main(void) {
         scanf("%s", command);
         system("clear");
     }
+    freeTrie(root);
 
 }
