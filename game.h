@@ -1,3 +1,4 @@
+//Board
 typedef struct boggleBoard {
     char letter;
     bool picked;
@@ -10,6 +11,7 @@ boggleBoard** initializeBoard(int size);
 void freeBoggleBoard(boggleBoard** board, int size);
 void displayBoard(int size, boggleBoard** board);
 
+//Trie
 typedef struct trieNode {
     struct trieNode *characters[27]; 
     bool isLeaf;
@@ -18,6 +20,7 @@ trieNode* createTrieNode();
 void insertTrieNode(trieNode* root, char* key);
 int searchTrie(trieNode* root, char* key);
 
+//Word List
 typedef struct list {
      char* word;
      bool playerFound;
