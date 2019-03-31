@@ -21,7 +21,7 @@ Build the project using `make` and execute using `./boggle`
 ## General Implementation Notes
 
 ### Dictionary File:
-This implementation uses the built in words unix file found in the /usr/share/dict/words path. Proper nouns are skipped, as well as any words containing non-alpha characters (Example: "a-ok").
+This implementation uses the built in words unix file found in the /usr/share/dict/words path. This file path may need to be changed in order to be properly accessed on your own computer. Proper nouns are skipped, as well as any words containing non-alpha characters (Example: "a-ok").
 
 
 ### Board Size:
