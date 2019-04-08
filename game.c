@@ -15,7 +15,8 @@ int main(void) {
     char word[1000];
     FILE *fp;
     
-    fp = fopen("/usr/share/dict/words", "r");
+    //fp = fopen("/usr/share/dict/words", "r");
+    fp = fopen("words_1.txt", "r");
     if (fp == NULL) {
         printf("Error: words file could not be found\n");
         return 1;

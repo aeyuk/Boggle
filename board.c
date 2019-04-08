@@ -25,7 +25,12 @@ int checkInput(char* input, char* type) {
             //temp = char converted into integer
             int temp = (int)input[i] - 48;
             //Build int version of size
-            numInput = numInput + (temp * pow(10, length - indexHelper));
+            int holder = 1;
+            for (int i = 0; i < (length-indexHelper); i++) {
+                holder *= 10;
+            }
+            //numInput = numInput + (temp * pow(10, length - indexHelper));
+            numInput = numInput + (temp * holder);
             indexHelper++;
         }
     }
@@ -91,20 +96,24 @@ void freeBoggleBoard(boggleBoard** board, int size) {
 boggleBoard** initializeBoard(int size) {
     //Hold all die in an array
     char letterList[] = {
-        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 
-        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
         'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
+
     //Allocate space for the board
     boggleBoard** board = (boggleBoard**) malloc (size * sizeof(boggleBoard*));
     for (int i = 0; i < size; i++) {
         board[i] = (boggleBoard*) malloc (sizeof(boggleBoard) * size);
     }
+
+
     //Load the board with random letters
     srand(time(NULL));
+
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            int randomIndex = rand() % strlen(letterList);
+            int randomIndex = rand() % 26;
             board[i][j].letter = letterList[randomIndex];
             board[i][j].picked = false;
         }
@@ -114,7 +123,7 @@ boggleBoard** initializeBoard(int size) {
 
 
 
-//Print board with arbitrary size to screen 
+//Print board with arbitrary size to screen
 void displayBoard(int size, boggleBoard** board) {
     printf("\n");
 
@@ -133,5 +142,3 @@ void displayBoard(int size, boggleBoard** board) {
     }
     return;
 }
-
-

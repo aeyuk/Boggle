@@ -18,7 +18,7 @@ static list* wordList;
 trieNode* createTrieNode() {
     trieNode* tNode = (trieNode*)malloc(sizeof(trieNode));
     tNode->isLeaf = false;
-    for (int i = 0; i < 27; i++) {
+    for (int i = 0; i < 26; i++) {
         tNode->characters[i] = NULL;
     }
     return tNode;
@@ -84,7 +84,7 @@ void freeWordlist() {
 
 
 void freeNode(trieNode* tCurrent) {
-    for (int i = 0; i < 27; i++) {
+    for (int i = 0; i < 26; i++) {
         if (tCurrent->characters[i] != NULL) {
             freeNode(tCurrent->characters[i]);
         }
@@ -142,7 +142,7 @@ bool inRange (boggleBoard** board, int size, int i, int j) {
 
 //Helper function to find all possible words
 void computerFindWordsHelper(boggleBoard** board, int i, int j, int size, 
-                char* userWord, int counter, trieNode* tCurrent) {
+                char* userWord, int counter, trieNode* root) {
     //Select letter
     board[i][j].picked = true;
     //Add letter to string
@@ -154,7 +154,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
     }
     counter++;
     //Check dictionary to validate prefix and print word to screen
-    int searchCheck = searchTrie(tCurrent, userWord);
+    int searchCheck = searchTrie(root, userWord);
     //Valid word!
     if (strlen(userWord) >= 3 && searchCheck == 1) { 
         //Check for duplicates, add to list if new
@@ -171,7 +171,7 @@ void computerFindWordsHelper(boggleBoard** board, int i, int j, int size,
             for (int col=j-1; col<=j+1; col++) {
                 if (inRange(board, size, row, col)) {
                         computerFindWordsHelper(board, row, col, size, 
-                        userWord, counter, tCurrent);
+                        userWord, counter, root);
                 }
             }
         }
@@ -203,8 +203,6 @@ void computerFindWords(boggleBoard** board, int size, trieNode* root) {
         wordList[i].playerFound = false;
         wordList[i].hidden = false;
     }
-
-    trieNode* tCurrent = root;
     //Hold index of current spot in userWord string
     int counter = 0;
     //Assume max size of word is longest word in dicitonary
@@ -216,7 +214,7 @@ void computerFindWords(boggleBoard** board, int size, trieNode* root) {
             memset(userWord, '\0', 47);
             counter = 0;
             computerFindWordsHelper(board, i, j, size, 
-            userWord, counter, tCurrent);
+            userWord, counter, root);
         }
     }
 
