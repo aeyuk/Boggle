@@ -21,7 +21,9 @@ Build the project using `make` and execute using `./boggle`
 ## General Implementation Notes
 
 ### Dictionary File:
-This implementation uses the built in words unix file found in the /usr/share/dict/words path. This file path may need to be changed in order to be properly accessed on your own computer. Proper nouns are skipped, as well as any words containing non-alpha characters (Example: "a-ok").
+This implementation uses the built in words unix file found in the /usr/share/dict/words path. This file path may need to be changed in order to be properly accessed on your own computer. Proper nouns are skipped, as well as any words containing non-alpha characters (Example: "a-ok"). If you do not have access to the unix file, download the following text file: 
+[Download](https://raw.githubusercontent.com/eneko/data-repository/master/data/words.txt)
+You just need to switch the file path. 
 
 
 ### Board Size:
