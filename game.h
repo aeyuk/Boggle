@@ -1,5 +1,5 @@
 #include "trie.h"
-
+ 
 //Word List
 typedef struct list {
      char* word;
