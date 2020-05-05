@@ -45,4 +45,5 @@ The user will be able to enter words found. In order to be a valid word, the wor
 ### Scoring System: 
 The scoring system complies with the traditional rules of boggle. Words the computer and user have both found will cancel out points. These words will still be displayed, but will be marked by two X's. Duplicate words will only be counted once. The winner of the round will gain a point on the overall game score, which will be stored as long as the player wishes to keep the match going. After a round is over, the user has the chance to see all the words they did not find on the board, when prompted. Entering 'y' will show the words. Any other input will skip the option. When prompted, if the user wishes to continue the match with the computer, any key can be entered and the match will continue. If 'q' is entered, the match will end. 
  
- 
+## Notes
+Sometimes the most basic of words will be found as invalid, but this is probably the case of the dictionary. For instance, "hid" is not in the dictionary I downloaded. Gameplay will be extremely dependent on the list of valid words provided.
