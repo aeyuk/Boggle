@@ -9,6 +9,10 @@
 
 #include "game.h"
 
+//Computer's possible words
+static int wordIndex = -1;
+static list* wordList;
+
 // Calculate points per word
 int calculateScore(char* word) {
     int length = strlen(word);

@@ -7,10 +7,6 @@
 
 #include "game.h"
 
-//Computer's possible words
-static int wordIndex = -1;
-static list* wordList;
-
 // https://www.techiedelight.com/trie-implementation-insert-search-delete/
 // General trie implementation sourced and modified
 // Creates and returns a new trie node, initialized to NULLs
