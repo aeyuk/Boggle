@@ -286,7 +286,6 @@ void printMissed() {
 }
 
 int main(void) {
-
     //Open dictionary file
     char word[1000];
     FILE *fp;
