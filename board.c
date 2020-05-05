@@ -68,7 +68,6 @@ int promptBoardSize() {
     return size;
 }
 
-
 //Prompt player to enter difficulty
 int promptDifficulty() {
     char tempDiffculty[10];;
@@ -82,7 +81,6 @@ int promptDifficulty() {
     return difficulty;
 }
 
-
 //Free memory
 void freeBoggleBoard(boggleBoard** board, int size) {
     for (int i = 0; i < size; i++) {
@@ -90,7 +88,6 @@ void freeBoggleBoard(boggleBoard** board, int size) {
     }
     free(board);
 }
-
 
 //Initialize the board
 boggleBoard** initializeBoard(int size) {
@@ -107,7 +104,6 @@ boggleBoard** initializeBoard(int size) {
         board[i] = (boggleBoard*) malloc (sizeof(boggleBoard) * size);
     }
 
-
     //Load the board with random letters
     srand(time(NULL));
 
@@ -120,8 +116,6 @@ boggleBoard** initializeBoard(int size) {
     }
     return board;
 }
-
-
 
 //Print board with arbitrary size to screen
 void displayBoard(int size, boggleBoard** board) {
