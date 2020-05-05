@@ -1,10 +1,5 @@
 #include "board.h"
 
-//Computer's possible words
-static int wordIndex = -1;
-
-static list* wordList;
-
 typedef struct trieNode {
     struct trieNode *characters[26]; 
     bool isLeaf;
